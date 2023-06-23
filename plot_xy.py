@@ -19,8 +19,6 @@ pd.plotting.register_matplotlib_converters()
 
 from file_parser import parse_file
 
-colors = sns.color_palette("colorblind")
-cmap = sns.color_palette("ch:s=.25,rot=-.25", as_cmap=True)
 __version__ = "0.9.0"
 
 # Use these settings for the PhD thesis
@@ -243,7 +241,7 @@ def plot_data(ax, data, x_axis, column_settings):
 
 
 def plot_series(plot, show_plot_window):
-    print(f"Ploting {plot['description']}")
+    print(f"Plotting {plot['description']}")
     # Load the data to be plotted
     plot_files = (plot_file for plot_file in plot["files"] if plot_file.get("show", True))
     data = pd.concat((load_data(plot_file)[0] for plot_file in plot_files), sort=True)
@@ -339,7 +337,6 @@ phi = (5**0.5 - 1) / 2
 
 
 if __name__ == "__main__":
-
     def init_argparse() -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(description="Generic plot generator for line and scatter plots.")
         parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")

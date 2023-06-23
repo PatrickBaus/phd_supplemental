@@ -191,7 +191,7 @@ def plot_data(ax, data, x_axis, column_settings):
 
 
 def plot_series(plot, show_plot_window):
-    print(f"Ploting {plot['description']}")
+    print(f"Plotting {plot['description']}")
     # Load the data to be plotted
     plot_files = (plot_file for plot_file in plot["files"] if plot_file.get("show", True))
     data = pd.concat((load_data(plot_file)[0] for plot_file in plot_files), sort=True)
