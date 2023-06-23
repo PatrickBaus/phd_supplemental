@@ -260,84 +260,6 @@ def init_argparse() -> argparse.ArgumentParser:
 
 
 if __name__ == "__main__":
-  plots = [
-    {
-      'title': 'Parallel IRF9610 MOSFET Monto-Carlo Simulation',
-      'title': None,
-      'show': False,
-      "output_file": {
-          "fname": "../images/ltspice_mosfet_mc_output_impedance.pgf"
-      },
-      'crop_secondary_to_primary': True,
-      "plot_size": (441.01773 / 72.27 * 0.89, 441.01773 / 72.27 * 0.89 * phi),
-      'primary_axis': {
-        "axis_settings": {
-          'x_label': r"Output impedance in \unit{\ohm}",
-          'y_label': r"Counts",
-          "invert_x": False,
-          "invert_y": False,
-          "y_fixed_order": None,
-          "x_scale": "linear",
-        },
-        'x-axis': "num",
-        'plot_type': 'absolute',  # absolute, relative, proportional
-        'columns_to_plot': {
-            "Rout": {
-                "label": "Parallel MOSFETs",
-                "color": colors[1],
-                #"bins": 50,
-            },
-            "Rout_s": {
-                "label": "Single MOSFET",
-                "color": colors[2],
-                #"bins": auto,
-            },
-            "Rout_p_sigma": {
-                "label": r"Parallel MOSFET $V_{DS}+1\sigma$",
-                "color": colors[0],
-                #"bins": auto,
-            },
-        },
-        'filter': None,#filter_savgol(window_length=101, polyorder=3),
-      },
-      'files': [
-        {
-          'filename': 'mosfet_current_source_parallel_mc.csv',
-          'show': True,
-          'parser': 'ltspice_fets',
-          'options': {
-            "columns": {0: "num", 1: "Rout"},
-            "scaling": {
-              "Rout": lambda x : 10**(x["Rout"]/20),
-            },
-          },
-        },
-        {
-          'filename': 'mosfet_current_source_single_mc.csv',
-          'show': True,
-          'parser': 'ltspice_fets',
-          'options': {
-            "columns": {0: "num", 1: "Rout_s"},
-            "scaling": {
-              "Rout_s": lambda x : 10**(x["Rout_s"]/20),
-            },
-          },
-        },
-        {
-          'filename': 'mosfet_current_source_parallel_mc-sigma.csv',
-          'show': True,
-          'parser': 'ltspice_fets',
-          'options': {
-            "columns": {0: "num", 1: "Rout_p_sigma"},
-            "scaling": {
-              "Rout_p_sigma": lambda x : 10**(x["Rout_p_sigma"]/20),
-            },
-          },
-        },
-      ],
-    },
-  ]
-
   parser = init_argparse()
   args = parser.parse_args()
   plot_files = glob.glob(args.plotfile)
@@ -350,8 +272,3 @@ if __name__ == "__main__":
           plot_series(plot=module.plot, show_plot_window=not args.silent)
       except FileNotFoundError as exc:
           print(f"  Data file not found. Cannot plot graph: {exc}")
-
-  #plots = (plot for plot in plots if plot.get('show', True))
-  #for plot in plots:
-  #  print("Ploting {plot!s}".format(plot=plot['title']))
-  #  plot_series(plot=plot)

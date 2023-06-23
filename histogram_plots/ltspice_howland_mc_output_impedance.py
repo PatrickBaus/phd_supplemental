@@ -6,7 +6,7 @@ colors = sns.color_palette("colorblind")
 phi = (5**0.5 - 1) / 2  # golden ratio
 plot = {
       'description': 'Howland Current Source Output Impedance',
-      'show': False,
+      'show': True,
       "output_file": {
           "fname": "../images/ltspice_howland_mc_output_impedance.pgf"
       },
@@ -54,7 +54,6 @@ plot = {
                 "range": (0, 5e7),
             },
         },
-        'filter': None,#filter_savgol(window_length=101, polyorder=3),
       },
       'files': [
         {
