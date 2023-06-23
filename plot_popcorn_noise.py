@@ -237,21 +237,21 @@ def plot_series(plot, show_plot_window):
         plot_settings = plot["primary_axis"]
         process_data(data=data, columns=plot_settings["columns_to_plot"], plot_type=plot_settings["plot_type"])
 
-        ax1 = plt.subplot(100*len(plot_settings["columns_to_plot"])+11)
+        ax1 = plt.subplot(100 * len(plot_settings["columns_to_plot"]) + 11)
         plt.tick_params("x", labelbottom=False)
         prepare_axis(ax=ax1, axis_settings=plot_settings["axis_settings"])
 
         key = list(plot_settings["columns_to_plot"])[0]
         plot_data(ax1, data, plot_settings["x-axis"], {key: plot_settings["columns_to_plot"][key]})
 
-        ax = plt.subplot(100*len(plot_settings["columns_to_plot"])+12, sharex=ax1, sharey=ax1)
+        ax = plt.subplot(100 * len(plot_settings["columns_to_plot"]) + 12, sharex=ax1, sharey=ax1)
         ax.set_ylabel(r"Voltage deviation in \unit{\V}")
         plt.tick_params("x", labelbottom=False)
         key = list(plot_settings["columns_to_plot"])[1]
         plot_data(ax, data, plot_settings["x-axis"], {key: plot_settings["columns_to_plot"][key]})
 
         key = list(plot_settings["columns_to_plot"])[2]
-        ax = plt.subplot(100*len(plot_settings["columns_to_plot"])+13, sharex=ax1, sharey=ax1)
+        ax = plt.subplot(100 * len(plot_settings["columns_to_plot"]) + 13, sharex=ax1, sharey=ax1)
         plot_data(ax, data, plot_settings["x-axis"], {key: plot_settings["columns_to_plot"][key]})
         ax.xaxis.set_major_locator(matplotlib.dates.AutoDateLocator())
         ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%H:%M"))
@@ -281,7 +281,7 @@ def plot_series(plot, show_plot_window):
 
 
 def init_argparse() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Generic plot generator for line and scatter plots.")
+    parser = argparse.ArgumentParser(description="Popcorn noise plotter.")
     parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
     parser.add_argument("--silent", action="store_true", help="Do not show the plot when set.")
 
@@ -296,7 +296,7 @@ if __name__ == "__main__":
             "output_file": {"fname": "../images/lm399_popcorn_noise.pgf"},
             "crop": {
                 "crop_index": "date",
-                "crop": ["2022-08-31 06:00:00", "2022-09-01 06:00:00"]
+                "crop": ["2022-08-31 06:00:00", "2022-09-01 06:00:00"],
             },  # popcorn noise comparison, used in PhD thesis
             "primary_axis": {
                 "axis_settings": {
@@ -309,7 +309,7 @@ if __name__ == "__main__":
                 "x-axis": "date",
                 "plot_type": "relative",  # absolute, relative, proportional
                 "axis_fixed_order": 0,
-                "columns_to_plot": { # popcorn noise comparison, used in PhD thesis
+                "columns_to_plot": {  # popcorn noise comparison, used in PhD thesis
                     "k2002_ch1": {
                         "label": r"K2002 CH1",
                         "color": colors[0],

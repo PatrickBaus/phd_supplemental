@@ -281,6 +281,7 @@ phi = (5**0.5 - 1) / 2  # golden ratio
 
 
 if __name__ == "__main__":
+
     def init_argparse() -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(description="FFT plot generator for noise plots.")
         parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")

@@ -337,6 +337,7 @@ phi = (5**0.5 - 1) / 2
 
 
 if __name__ == "__main__":
+
     def init_argparse() -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(description="x-y plot generator for line and scatter plots.")
         parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
