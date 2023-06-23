@@ -37,60 +37,6 @@ plot = {
             },
             "files": [
                 {
-                    "filename": "Fluke5440B_vs_DMMs_2022-10-02_10:56:31+00:00.csv",
-                    "show": False,
-                    "parser": "ltspice_fets",
-                    "options": {
-                        "columns": {
-                            0: "date",
-                            1: "k2002",
-                            2: "3458a",
-                            3: "34470a",
-                            4: "dmm6500",
-                            6: "temperature",
-                        },
-                        "scaling": {
-                            "date": lambda data: pd.to_datetime(data.date, utc=True, format="ISO8601"),
-                        },
-                    },
-                },
-                {
-                    "filename": "Fluke5440B_vs_DMMs_2022-10-04_09:36:58+00:00.csv",
-                    "show": False,
-                    "parser": "ltspice_fets",
-                    "options": {
-                        "columns": {
-                            0: "date",
-                            1: "k2002",
-                            2: "3458a",
-                            3: "34470a",
-                            4: "dmm6500",
-                            6: "temperature",
-                        },
-                        "scaling": {
-                            "date": lambda data: pd.to_datetime(data.date, utc=True, format="ISO8601"),
-                        },
-                    },
-                },
-                {
-                    "filename": "Fluke5440B_vs_DMMs_2022-10-04_10:18:19+00:00.csv",
-                    "show": False,
-                    "parser": "ltspice_fets",
-                    "options": {
-                        "columns": {
-                            0: "date",
-                            1: "k2002",
-                            2: "3458a",
-                            3: "34470a",
-                            4: "dmm6500",
-                            6: "temperature",
-                        },
-                        "scaling": {
-                            "date": lambda data: pd.to_datetime(data.date, utc=True, format="ISO8601"),
-                        },
-                    },
-                },
-                {
                     "filename": "Fluke5440B_vs_DMMs_2022-10-04_12:16:21+00:00.csv",
                     "show": True,
                     "parser": "ltspice_fets",

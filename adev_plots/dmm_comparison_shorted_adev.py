@@ -89,7 +89,6 @@ plot = {
                     },
                 },
                 {
-                    #'filename': 'DMM_shorted_input_34470a_2022-11-21_13:44:19+00:00.csv',
                     "filename": "DMM_shorted_input_34470a_2022-12-02_16:56:31+00:00.csv",
                     "show": True,
                     "parser": "ltspice_fets",
@@ -97,20 +96,6 @@ plot = {
                         "columns": {
                             0: "date",
                             1: "34470a",
-                        },
-                        "scaling": {
-                            "date": lambda data: pd.to_datetime(data.date, utc=True, format="ISO8601"),
-                        },
-                    },
-                },
-                {
-                    "filename": "DMM_shorted_input_34470a_2022-11-29_11:49:13+00:00.csv",
-                    "show": False,
-                    "parser": "ltspice_fets",
-                    "options": {
-                        "columns": {
-                            0: "date",
-                            1: "34470a_noaz",
                         },
                         "scaling": {
                             "date": lambda data: pd.to_datetime(data.date, utc=True, format="ISO8601"),
