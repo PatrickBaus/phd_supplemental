@@ -282,7 +282,7 @@ phi = (5**0.5 - 1) / 2  # golden ratio
 
 if __name__ == "__main__":
     def init_argparse() -> argparse.ArgumentParser:
-        parser = argparse.ArgumentParser(description="Generic plot generator for line and scatter plots.")
+        parser = argparse.ArgumentParser(description="FFT plot generator for noise plots.")
         parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
         parser.add_argument("plotfile", help="One or more yaml configurations to plot.")
         parser.add_argument("--silent", action="store_true", help="Do not show the plot when set.")

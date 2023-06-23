@@ -4,6 +4,7 @@ source env/bin/activate
 ./plot_ltspice_monte-carlo.py --silent "histogram_plots/*.py"
 ./plot_xy.py --silent "xy_plots/*.py"
 ./plot_fft.py --silent "fft_plots/*.py"
+./plot_popcorn_noise.py --silent
 cd simulations
 ./sim_laplace_fopdt.py --silent
 ./sim_pid_controller_bode.py --silent
