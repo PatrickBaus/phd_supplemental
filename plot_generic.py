@@ -18,7 +18,6 @@ pd.plotting.register_matplotlib_converters()
 
 from file_parser import parse_file
 
-colors = sns.color_palette("colorblind")
 __version__ = "0.9.0"
 
 # Use these settings for the PhD thesis
@@ -117,10 +116,8 @@ def crop_data(data, crop_index="date", crop=None):
 def downsample_data(x_data, y_data):
     # This is hacky
     x_is_time = False
-    dtype = None
     if pd.api.types.is_datetime64_any_dtype(x_data):
         x_is_time = True
-        dtype = x_data.dtype
         x_data = pd.to_datetime(x_data).astype(np.int64)
 
     x_data, y_data = lttb.downsample(np.array([x_data, y_data]).T, n_out=1000, validators=[]).T

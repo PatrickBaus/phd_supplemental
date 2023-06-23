@@ -1,23 +1,26 @@
 #!/usr/bin/env python
 import argparse
-import datetime
 import glob
 import importlib
 
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.mlab as mlab
 import matplotlib.legend
 import numpy as np
 import os
 import pandas as pd
 from matplotlib.ticker import ScalarFormatter
 import seaborn as sns
+from scipy import stats
+from statsmodels.formula.api import ols
+import lttb
 
 pd.plotting.register_matplotlib_converters()
 
 from file_parser import parse_file
 
+colors = sns.color_palette("colorblind")
+cmap = sns.color_palette("ch:s=.25,rot=-.25", as_cmap=True)
 __version__ = "0.9.0"
 
 # Use these settings for the PhD thesis
@@ -105,6 +108,7 @@ def load_data(plot_file):
 
 def crop_data(data, crop_index="date", crop=None):
     if crop is not None:
+        data.sort_values(by=crop_index, inplace=True)
         index_to_drop = (
             data[(data[crop_index] < crop[0]) | (data[crop_index] > crop[1])].index
             if len(crop) > 1
@@ -156,47 +160,86 @@ def process_data(data, columns, plot_type):
 
 
 def prepare_axis(ax, axis_settings, color_map=None):
-    if axis_settings.get("y_fixed_order") is not None:
-        ax.yaxis.set_major_formatter(FixedOrderFormatter(axis_settings["y_fixed_order"], useOffset=True))
+    if axis_settings.get("fixed_order") is not None:
+        ax.yaxis.set_major_formatter(FixedOrderFormatter(axis_settings["fixed_order"], useOffset=True))
     else:
         ax.yaxis.get_major_formatter().set_useOffset(False)
-
-    if axis_settings.get("x_fixed_order") is not None:
-        ax.xaxis.set_major_formatter(FixedOrderFormatter(axis_settings["x_fixed_order"], useOffset=True))
-    else:
-        ax.xaxis.get_major_formatter().set_useOffset(False)
 
     if axis_settings.get("y_scale") == "log":
         ax.set_yscale("log")
     if axis_settings.get("x_scale") == "log":
         ax.set_xscale("log")
+    if axis_settings.get("x_scale") == "time":
+        ax.xaxis.set_major_locator(matplotlib.dates.AutoDateLocator())
+        # ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%m-%d %H:%M"))
+        ax.xaxis.set_major_formatter(matplotlib.dates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
     if axis_settings.get("invert_y"):
         ax.invert_yaxis()
     if axis_settings.get("invert_x"):
         ax.invert_xaxis()
 
-    ax.grid(True, which="minor", ls="-", color="0.85")
-    ax.grid(True, which="major", ls="-", color="0.45")
+    if axis_settings.get("show_grid", True):
+        ax.grid(True, which="minor", ls="-", color="0.85")
+        ax.grid(True, which="major", ls="-", color="0.45")
+    # else:
+    #  ax.grid(False, which="both")
 
     ax.set_ylabel(axis_settings["y_label"])
-    ax.set_xlabel(axis_settings["x_label"])
+    if axis_settings.get("x_label") is not None:
+        ax.set_xlabel(axis_settings["x_label"])
 
     if color_map is not None:
         ax.set_prop_cycle("color", color_map)
 
 
+def fit_data(data, x_axis, y_axis):
+    model = ols(f"{y_axis} ~ {x_axis}", data).fit()
+
+    # Calculate uncertainty for 1 sigma from the standard error
+    uncertainty = (
+        model.bse * stats.t.interval(0.997300203936740, len(data) - 1)[1]
+    )  # 1 sigma (1-alpha = 0.682689492137086) = 68%, 2 sigma = 0.954499736103642, 3 sigma = 0.997300203936740, etc
+
+    return {
+        "intercept": model.params.Intercept,
+        "slope": model.params[x_axis],
+        "uncertainty": uncertainty[x_axis],
+    }
+
+
+def downsample_data(x_data, y_data):
+    # This is hacky
+    x_is_time = False
+    if pd.api.types.is_datetime64_any_dtype(x_data):
+        x_is_time = True
+        x_data = pd.to_datetime(x_data).astype(np.int64)
+
+    x_data, y_data = lttb.downsample(np.array([x_data, y_data]).T, n_out=1000, validators=[]).T
+
+    if x_is_time:
+        x_data = pd.to_datetime(x_data, utc=True)
+
+    return x_data, y_data
+
+
 def plot_data(ax, data, x_axis, column_settings):
-    shared_bins = np.histogram_bin_edges(data[column_settings.keys()], bins="sturges")
     for column, settings in column_settings.items():
         if column in data:
-            if "bins" in settings:
-                n, bins, _ = ax.hist(data[column], alpha=0.7, **settings)
+            if "cmap" in settings:
+                data_points = max(len(data) // 1000, 1)
+                downsampled_data = data.iloc[::data_points]
+                print(f"  Scatter data downsampled to {len(downsampled_data)} points.")
+                ax.scatter(
+                    downsampled_data[x_axis], downsampled_data[column], alpha=0.7, c=downsampled_data.date, **settings
+                )
             else:
-                n, bins, _ = ax.hist(data[column], alpha=0.7, bins=shared_bins, **settings)
-            # To calculate the probability, calculate the one we do want and subtract it from 1, because the very high
-            # impedances are ignored (see range option) for readability
-            print(f"Smallest bin with more than zero counts: {bins[:-1][n > 0][0]/1e6} MΩ")
-            print(f"Probability of getting more than 7.5 MΩ: {1-(sum(n[bins[:-1]<7.5e6]) / len(data[column]))}")
+                data_to_plot = data[[x_axis, column]].dropna()
+                if len(data_to_plot) > 1000:
+                    x_data, y_data = downsample_data(*(data_to_plot[idx] for idx in data_to_plot))
+                else:
+                    x_data, y_data = (data_to_plot[idx] for idx in data_to_plot)
+                print(f"  Plotting {len(x_data)} values.")
+                ax.plot(x_data, y_data, marker="", alpha=0.7, **settings)
 
 
 def plot_series(plot, show_plot_window):
@@ -204,76 +247,107 @@ def plot_series(plot, show_plot_window):
     # Load the data to be plotted
     plot_files = (plot_file for plot_file in plot["files"] if plot_file.get("show", True))
     data = pd.concat((load_data(plot_file)[0] for plot_file in plot_files), sort=True)
-    # Removes NAs from each column by shifting the values up, then remove all rows, that have no data
-    data = data.apply(lambda x: pd.Series(x.dropna().values)).dropna()
+    data.reset_index(drop=True, inplace=True)
 
     # If we have something to plot, proceed
     if not data.empty:
-        crop_data(data, crop_index="Rout", crop=plot.get("crop"))
+        crop_data(data, **plot.get("crop", {}))
 
+        data = data.resample("30S", on="date").mean()
+        data.reset_index(drop=False, inplace=True)
         plot_settings = plot["primary_axis"]
         process_data(
             data=data, columns=plot_settings["columns_to_plot"], plot_type=plot_settings.get("plot_type", "absolute")
         )
 
-        ax1 = plt.subplot(111)
-        # plt.tick_params('x', labelbottom=False)
-        prepare_axis(ax=ax1, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
+        if True:
+            ax1 = plt.subplot(211)
+            # plt.tick_params('x', labelbottom=False)
+            prepare_axis(ax=ax1, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
 
-        plot_data(ax1, data, x_axis=plot_settings["x-axis"], column_settings=plot_settings["columns_to_plot"])
+            x_axis = plot_settings["x-axis"]
+            plot_data(ax1, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
 
-        lines, labels = ax1.get_legend_handles_labels()
+            lines, labels = ax1.get_legend_handles_labels()
 
-        plot_settings = plot.get("secondary_axis", {})
-        if plot_settings.get("show", False):
-            ax2 = ax1.twinx()
-            plot_data(ax2, data, plot_settings["columns_to_plot"])
+            plot_settings = plot.get("secondary_axis", {})
+            if plot_settings.get("show", False):
+                ax2 = ax1.twinx()
+                prepare_axis(ax=ax2, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
 
-            ax2.set_ylabel(plot_settings["label"])
+                plot_data(ax2, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
 
-            lines2, labels2 = ax2.get_legend_handles_labels()
-            lines += lines2
-            labels += labels2
-        plt.legend(lines, labels, loc="best")
+                # ax2.set_ylabel(plot_settings["label"])
+
+                lines2, labels2 = ax2.get_legend_handles_labels()
+                lines += lines2
+                labels += labels2
+
+            plt.legend(lines, labels, loc=plot.get("legend_position", "upper left"))
+
+        if True:
+            ax3 = plt.subplot(212)
+            plot_settings = plot["xy_plot"]
+            x_axis = plot_settings["x-axis"]
+            y_axis = plot_settings["y-axis"]
+            fit = fit_data(data, x_axis, y_axis)
+            data["fit"] = fit["slope"] * data[x_axis] + fit["intercept"]
+            prepare_axis(ax=ax3, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
+            plot_data(ax3, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
+            lines2, labels2 = ax3.get_legend_handles_labels()
+
+            ax3.legend(lines2, labels2, loc=plot_settings.get("legend_position", "upper left"))
+            if plot_settings.get("annotation"):
+                ax3.annotate(
+                    plot_settings["annotation"]["label"].format(slope=fit["slope"], uncertainty=fit["uncertainty"]),
+                    plot_settings["annotation"]["xy"],
+                    # f"Tempco: ({fit['slope']:.3e} ± {fit['uncertainty']:.2e}) \\unit[per-mode=symbol]{{\\ohm \\per \\kelvin}}",
+                    # xy=(0.9,0.1),
+                    xycoords="axes fraction",
+                    xytext=(-5, 0),
+                    textcoords="offset points",
+                    horizontalalignment="right",
+                    bbox=dict(
+                        boxstyle="round", facecolor="white", alpha=0.8, edgecolor="0.8"
+                    ),  # use the same values as the legend
+                )
 
     fig = plt.gcf()
     #  fig.set_size_inches(11.69,8.27)   # A4 in inch
     #  fig.set_size_inches(128/25.4 * 2.7 * 0.8, 96/25.4 * 1.5 * 0.8)  # Latex Beamer size 128 mm by 96 mm
-    phi = (5**0.5 - 1) / 2  # golden ratio
     if plot.get("plot_size"):
         fig.set_size_inches(*plot["plot_size"])
     else:
-        fig.set_size_inches(441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi)
+        phi = (5**0.5 - 1) / 2  # golden ratio
+        fig.set_size_inches(441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi * 2)  # y * 2 for 2 plots
     if plot.get("title") is not None:
         plt.suptitle(plot["title"], fontsize=16)
 
     plt.tight_layout()
     if plot.get("title") is not None:
         plt.subplots_adjust(top=0.88)
-
     if plot.get("output_file"):
         print(f"  Saving image to '{plot['output_file']['fname']}'")
         plt.savefig(**plot["output_file"])
-
     if show_plot_window:
         plt.show()
 
     plt.close(fig)
 
 
-phi = (5**0.5 - 1) / 2  # golden ratio
-
-
-def init_argparse() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Plot histograms for Monte Carlo plots.")
-    parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
-    parser.add_argument("plotfile", help="One or more yaml configurations to plot.")
-    parser.add_argument("--silent", action="store_true", help="Do not show the plot when set.")
-
-    return parser
+phi = (5**0.5 - 1) / 2
 
 
 if __name__ == "__main__":
+
+    def init_argparse() -> argparse.ArgumentParser:
+        parser = argparse.ArgumentParser(description="Generic plot generator for line and scatter plots.")
+        parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
+        parser.add_argument("plotfile", help="One or more yaml configurations to plot.")
+        parser.add_argument("--silent", action="store_true", help="Do not show the plot when set.")
+
+        return parser
+
     parser = init_argparse()
     args = parser.parse_args()
     plot_files = glob.glob(args.plotfile)
@@ -286,3 +360,8 @@ if __name__ == "__main__":
             plot_series(plot=module.plot, show_plot_window=not args.silent)
         except FileNotFoundError as exc:
             print(f"  Data file not found. Cannot plot graph: {exc}")
+
+    # plots = (plot for plot in plots if plot.get('show', True))
+    # for plot in plots:
+    #  print("Ploting {plot!s}".format(plot=plot['title']))
+    #  plot_series(plot=plot)

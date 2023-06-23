@@ -32,16 +32,10 @@ def calculate_plc100(data):
 
 def parse_Keysight34470A_file(filename, options, **kwargs):
     # Parse the sampling rate and start date from the header
-    header = pd.read_csv(
-        filename, nrows=2,
-        delimiter=options.get("delimiter", ","),
-        header=None
-    )
+    header = pd.read_csv(filename, nrows=2, delimiter=options.get("delimiter", ","), header=None)
     sample_interval = float(header.at[1, 1])
     # Use UTC -1 for all dates *before* 2017-05-09
-    start_date = dateutil.parser.parse(
-        "{date} {time} UTC".format(date=header.at[0, 1], time=header.at[0, 3])
-    )
+    start_date = dateutil.parser.parse("{date} {time} UTC".format(date=header.at[0, 1], time=header.at[0, 3]))
     start_date_ts = start_date.replace(tzinfo=datetime.timezone.utc).timestamp()
 
     data = pd.read_csv(
@@ -49,8 +43,14 @@ def parse_Keysight34470A_file(filename, options, **kwargs):
         skiprows=3,
         header=None,
         delimiter=options.get("delimiter", ","),
-        usecols=(0, 1,),
-        names=("date", options.get("value_name", "value"),),
+        usecols=(
+            0,
+            1,
+        ),
+        names=(
+            "date",
+            options.get("value_name", "value"),
+        ),
     )
 
     data["date"] = pd.to_datetime(data["date"] * sample_interval + start_date_ts, unit="s")
@@ -139,14 +139,12 @@ def parse_smi_file(filename, options, **kwargs):
         comment="#",
         header=0,
         usecols=[0, 1, 2, 3],
-        names=["sensor_id", "date", options.get("label","sensor_value"), "unit"],
+        names=["sensor_id", "date", options.get("label", "sensor_value"), "unit"],
     )
 
     # Drop all sensor ids we do not want
     if options.get("sensor_id") is not None:
-        data = data.loc[
-            data["sensor_id"] == options["sensor_id"]
-        ]  # Select only the sensors we want
+        data = data.loc[data["sensor_id"] == options["sensor_id"]]  # Select only the sensors we want
         data.drop(columns="sensor_id", inplace=True)
 
     # The date parser function (Timezone will be parsed as UTC to UTC) used for testing.
@@ -178,9 +176,7 @@ def parse_fluke1524_file(filename, options, **kwargs):
 
     # Drop all sensor ids we do not want
     if options.get("sensor_id") is not None:
-        data = data.loc[
-            data["sensor_id"] == options["sensor_id"]
-        ]  # Select only the sensors we want
+        data = data.loc[data["sensor_id"] == options["sensor_id"]]  # Select only the sensors we want
         data.drop(columns="sensor_id", inplace=True)
 
     # Rename datetime field
@@ -203,9 +199,7 @@ def parse_RSA306_file(filename, options):
     # String looks like this:
     # >>> print(repr(line))
     # 'Resolution Bandwidth,4,Hz\n'
-    regex_rbw = re.compile(
-        "^Resolution Bandwidth\,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\,([A-Za-z]+)\n$"
-    )
+    regex_rbw = re.compile("^Resolution Bandwidth\,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\,([A-Za-z]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'Trace 1\n'
@@ -213,9 +207,7 @@ def parse_RSA306_file(filename, options):
     # String looks like this:
     # >>> print(repr(line))
     # 'XStart,0,Hz\n'
-    regex_trace = re.compile(
-        "^Trace ([0-9]),,([A-Za-z]+),[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+\n$"
-    )
+    regex_trace = re.compile("^Trace ([0-9]),,([A-Za-z]+),[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'NumberPoints,64001\n'
@@ -223,15 +215,11 @@ def parse_RSA306_file(filename, options):
     # String looks like this:
     # >>> print(repr(line))
     # 'XStart,0,Hz\n'
-    regex_start = re.compile(
-        "^XStart,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$"
-    )
+    regex_start = re.compile("^XStart,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'XStop,1000000,Hz\n'
-    regex_end = re.compile(
-        "^XStop,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$"
-    )
+    regex_end = re.compile("^XStop,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # '-30.208715438842773\n'
@@ -271,18 +259,12 @@ def parse_RSA306_file(filename, options):
             if regex_number_of_traces.match(line):
                 # We need to enter this regex multiple times, because there is no distinct line that has the number
                 # of rows, so we misuse the trace parameters to find the highest trace number
-                number_of_traces = max(
-                    int(regex_number_of_traces.match(line).group(1)), number_of_traces
-                )
+                number_of_traces = max(int(regex_number_of_traces.match(line).group(1)), number_of_traces)
                 continue
             if start_of_data is None and line == "[Traces]\n":
-                print(
-                    f"  Number of traces in file: {number_of_traces}"
-                )  # We now know the number of total traces
+                print(f"  Number of traces in file: {number_of_traces}")  # We now know the number of total traces
                 if selected_trace > number_of_traces:
-                    raise TypeError(
-                        "Selected trace is larger than the number of available traces!"
-                    )
+                    raise TypeError("Selected trace is larger than the number of available traces!")
                 next(enumerated_lines)  # Skip '[Trace]\n'
             if regex_trace.match(line):
                 # We have found a trace
@@ -371,11 +353,7 @@ def parse_MSO9000_file(filename, options):
 
     data = data.set_index("date")
     sample_interval = (data.index[-1] - data.index[0]) / (len(data.index) - 1)
-    print(
-        "  Infiniium sampling rate: {sampling_rate} Hz".format(
-            sampling_rate=1 / sample_interval
-        )
-    )
+    print("  Infiniium sampling rate: {sampling_rate} Hz".format(sampling_rate=1 / sample_interval))
     return data, {"sample_interval": sample_interval}
 
 
@@ -393,9 +371,7 @@ def parse_3458A_SN18_file_1(filename, options=None):
     )
     sample_interval = (data.index[-1] - data.index[0]) / (len(data.index) - 1)
 
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
     return data, 0
 
 
@@ -413,9 +389,7 @@ def parse_3458A_SN18_file_2(filename, options=None):
     )
     sample_interval = (data.index[-1] - data.index[0]) / (len(data.index) - 1)
 
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
     return data, 0
 
 
@@ -434,9 +408,7 @@ def parse_3458A_SN18_file_3(filename, options=None):
     )
     sample_interval = (data.index[-1] - data.index[0]) / (len(data.index) - 1)
 
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
     return data, 0
 
 
@@ -450,9 +422,7 @@ def parse_3458A_SN18_file_4(filename, options=None):
     )
     sample_interval = (data.index[-1] - data.index[0]) / (len(data.index) - 1)
 
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     if options.get("sensor_id") is not None:
         data.rename(columns={options["sensor_id"]: "value"}, inplace=True)
@@ -489,18 +459,14 @@ def parse_mecom_file(filename, options=None):
         names=["date", "tec_sensor", "tec_current"],
     )
 
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
     #  data.set_index('date', inplace=True)
 
     return data, 0
 
 
 def parse_3458A_dgDrive_file(filename, options):
-    data = pd.read_csv(
-        filename, comment="#", header=None, usecols=[0, 1], names=["date", "value"]
-    )
+    data = pd.read_csv(filename, comment="#", header=None, usecols=[0, 1], names=["date", "value"])
     # data = data[data.value != -1.000000000E+38]
     data["date"] = pd.to_datetime(
         data["date"], utc=True
@@ -611,14 +577,7 @@ def convertResistanceToTemperature(values):
     rt25 = 10 * 10**3
 
     return (
-        1
-        / (
-            a
-            + b * np.log(values / rt25)
-            + c * np.log(values / rt25) ** 2
-            + d * np.log(values / rt25) ** 3
-        )
-        - 273.15
+        1 / (a + b * np.log(values / rt25) + c * np.log(values / rt25) ** 2 + d * np.log(values / rt25) ** 3) - 273.15
     )
 
 
@@ -657,9 +616,7 @@ def parse_3458A_tempco_v4_file(filename, options):
     )
     #  data.shunt = convertResistanceToTemperature(data.shunt)
     # data = data[data.value != -1.000000000E+38]
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
     #  data.set_index('date', inplace=True)
 
     if options.get("sensor_id") is not None:
@@ -696,9 +653,7 @@ def parse_3458A_tempco_v5_file(filename, options):
     )
     data.DMM6500 = convertResistanceToTemperature(data.DMM6500)
     #  data = data[data.value != -1.000000000E+38]
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
     #  data.set_index('date', inplace=True)
 
     #  offset =  options.get('offset', 0)
@@ -729,9 +684,7 @@ def parse_3458A_tempco_v6_file(filename, options):
         names=["date", "HP3458A", "dmm", "ambient", "humidity", "ambient2"],
     )
     #  data = data[data.value != -1.000000000E+38]
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -751,9 +704,7 @@ def parse_3458A_tempco_v7_file(filename, options):
     )
     #  data = data[data.value != -1.000000000E+38]
     data.DMM6500 = convertResistanceToTemperature(data.DMM6500)
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -773,9 +724,7 @@ def parse_3458A_tempco_v8_file(filename, options):
     )
     #  data = data[data.value != -1.000000000E+38]
     # data.DMM6500 = convertResistanceToTemperature(data.DMM6500)
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -803,9 +752,7 @@ def parse_3458A_tempco_v9_file(filename, options):
     )
     #  data = data[data.value != -1.000000000E+38]
     # data.DMM6500 = convertResistanceToTemperature(data.DMM6500)
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -837,9 +784,7 @@ def parse_3458A_tempco_v11_file(filename, options):
     )
     #  data = data[data.value != -1.000000000E+38]
     # data.DMM6500 = convertResistanceToTemperature(data.DMM6500)
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -873,9 +818,7 @@ def parse_3458A_tempco_v12_file(filename, options):
     #  data = data[data.value != -1.000000000E+38]
     # data.DMM6500 = convertResistanceToTemperature(data.DMM6500)
     data = data[2:]  # The first 2 values of the HP3458A are a few ppm out
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -910,9 +853,7 @@ def parse_3458A_tempco_v13_file(filename, options):
     #  data = data[data.value != -1.000000000E+38]
     # data.DMM6500 = convertResistanceToTemperature(data.DMM6500)
     data = data[2:]  # The first 2 values of the HP3458A are a few ppm out
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -922,13 +863,9 @@ def parse_3458A_tempco_v13_file(filename, options):
 
 
 def parse_LM399_logger_file(filename, options):
-    data = pd.read_csv(
-        filename, comment="#", header=None, usecols=[0, 1], names=["date", "value"]
-    )
+    data = pd.read_csv(filename, comment="#", header=None, usecols=[0, 1], names=["date", "value"])
     data = data[data.value > -9.90000000e37]  # Drop out out bounds
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     remove_beyond_sigma = options.get("remove_outliers", {}).get("sigma")
     if remove_beyond_sigma is not None:
@@ -938,14 +875,8 @@ def parse_LM399_logger_file(filename, options):
                 sigma_count=remove_beyond_sigma, sigma=sigma
             )
         )
-        data = data[
-            np.abs(data.value - data.value.mean()) <= (remove_beyond_sigma * sigma)
-        ]
-        print(
-            "    Std. deviation after removing outliers σ = {sigma}".format(
-                sigma=data.value.std()
-            )
-        )
+        data = data[np.abs(data.value - data.value.mean()) <= (remove_beyond_sigma * sigma)]
+        print("    Std. deviation after removing outliers σ = {sigma}".format(sigma=data.value.std()))
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -963,9 +894,7 @@ def parse_LM399_logger_v2_file(filename, options, **kwargs):
         names=["date", "value", "tmp236"],
     )
     data = data[abs(data.value) < 9.90000000e37]  # Drop out out bounds
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     #  data = calculate_plc100(data)
 
@@ -977,14 +906,8 @@ def parse_LM399_logger_v2_file(filename, options, **kwargs):
                 sigma_count=remove_beyond_sigma, sigma=sigma
             )
         )
-        data = data[
-            np.abs(data.value - data.value.mean()) <= (remove_beyond_sigma * sigma)
-        ]
-        print(
-            "    Std. deviation after removing outliers σ = {sigma}".format(
-                sigma=data.value.std()
-            )
-        )
+        data = data[np.abs(data.value - data.value.mean()) <= (remove_beyond_sigma * sigma)]
+        print("    Std. deviation after removing outliers σ = {sigma}".format(sigma=data.value.std()))
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -994,12 +917,8 @@ def parse_LM399_logger_v2_file(filename, options, **kwargs):
 
 
 def parse_LTZ1000_logger_file(filename, options):
-    data = pd.read_csv(
-        filename, comment="#", header=None, usecols=[0, 1], names=["date", "HP3458A"]
-    )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data = pd.read_csv(filename, comment="#", header=None, usecols=[0, 1], names=["date", "HP3458A"])
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1016,9 +935,7 @@ def parse_LTZ1000_logger_v2_file(filename, options):
         usecols=[0, 1, 2, 3, 4],
         names=["date", "HP3458A", "ambient", "dmm", "humidity"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1049,9 +966,7 @@ def parse_LTZ1000_logger_v3_file(filename, options):
         ],
         dtype={"HP3458A": "float"},
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1068,9 +983,7 @@ def parse_3478A_file(filename, options):
         usecols=[0, 1, 2],
         names=["date", "HP3478A", "temp_dut"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     if options.get("convert_temperature", False):
         data.HP3478A = convertResistanceToTemperature(data.HP3478A)
@@ -1083,18 +996,12 @@ def parse_3478A_file(filename, options):
 
 
 def parse_RTH1004_file(filename, options):
-    data = pd.read_csv(
-        filename, delimiter=",", usecols=[0, 1], skiprows=22, names=["date", "value"]
-    )
+    data = pd.read_csv(filename, delimiter=",", usecols=[0, 1], skiprows=22, names=["date", "value"])
     data.value /= options.get("gain", 1)
 
     data = data.set_index("date")
     sample_interval = (data.index[-1] - data.index[0]) / (len(data.index) - 1)
-    print(
-        "  RTH1004 sampling rate: {sampling_rate} Hz".format(
-            sampling_rate=1 / sample_interval
-        )
-    )
+    print("  RTH1004 sampling rate: {sampling_rate} Hz".format(sampling_rate=1 / sample_interval))
     return data, {"sample_interval": sample_interval}
 
 
@@ -1107,7 +1014,6 @@ def parse_RTH1004_spectrum_file(filename, options):
     rbw = None
     with open(filename) as lines:
         for row_num, line in enumerate(lines):
-
             if rbw is None and regex_rbw.match(line):
                 rbw = float(regex_rbw.match(line).group(2))
                 unit = regex_rbw.match(line).group(1)
@@ -1141,9 +1047,7 @@ def parse_Fluke5440B_test_file(filename, options):
             "K2002",
         ],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1153,12 +1057,8 @@ def parse_Fluke5440B_test_file(filename, options):
 
 
 def parse_slice_qtc_file(filename, options):
-    data = pd.read_csv(
-        filename, comment="#", header=None, usecols=[0, 1], names=["date", "slice_qtc"]
-    )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data = pd.read_csv(filename, comment="#", header=None, usecols=[0, 1], names=["date", "slice_qtc"])
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1176,9 +1076,7 @@ def parse_Fluke5440B_test_file_v2(filename, options):
         names=["date", "HP3458A", "temp_10k", "temp_100", "humidity_lab", "K2002"],
         dtype={"HP3458A": "float"},
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1195,9 +1093,7 @@ def parse_Keysight34470A_file_2(filename, options, delimiter=","):
         usecols=[0, 1, 2, 3],
         names=["date", "34470A", "temp_100", "humidity"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1214,9 +1110,7 @@ def parse_labtemp_drift_file(filename, options, delimiter=","):
         usecols=[0, 1, 2, 3, 4],
         names=["date", "temp_10k", "temp_100", "humidity_lab", "temp_ee07"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1264,9 +1158,7 @@ def parse_SCAN2000_file(filename, options, delimiter=",", **_kwargs):
             "setpoint_tec",
         ],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1290,9 +1182,7 @@ def parse_WS8_file(filename, options, delimiter=","):
         ],
         names=["date", "ch1", "ch2", "pressure", "temp"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
     # Convert to Hz
     data.ch1 *= 10**12
     data.ch2 *= 10**12
@@ -1323,9 +1213,7 @@ def parse_timescale_db_file(filename, options, delimiter=","):
             "piezo_voltage",
         ],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1350,9 +1238,7 @@ def parse_timescale_db_015_file(filename, options, delimiter=","):
             "piezo_voltage",
         ],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1374,9 +1260,7 @@ def parse_timescale_db_file_v2(filename, options, delimiter=",", **kwargs):
             "temperature",
         ],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1394,9 +1278,7 @@ def parse_timescale_db_file_v3(filename, options, delimiter=",", **kwargs):
         usecols=range(4),
         names=["date", "output", "temperature_room", "temperature_labnode"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1411,12 +1293,13 @@ def parse_timescale_db_file_v4(filename, options, delimiter=",", **kwargs):
         skiprows=1,
         comment="#",
         header=None,
-        usecols=range(len(options["labels"])+1),
-        names=["date",] + options["labels"],
+        usecols=range(len(options["labels"]) + 1),
+        names=[
+            "date",
+        ]
+        + options["labels"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1434,9 +1317,7 @@ def parse_timescale_db_fluke5440b(filename, options, delimiter=",", **kwargs):
         usecols=range(6),
         names=["date", "34470a", "3458a", "k2002", "dmm6500", "temperature"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1453,9 +1334,7 @@ def parse_data_logger_fluke5440b(filename, options, delimiter=",", **kwargs):
         usecols=[0, 1, 2, 3, 4, 6],
         names=["date", "k2002", "3458a", "34470a", "dmm6500", "temperature"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
@@ -1469,7 +1348,10 @@ def parse_data_logger_short_dmm(filename, options, delimiter=",", **kwargs):
         filename,
         comment="#",
         header=None,
-        usecols=[0, 1,],
+        usecols=[
+            0,
+            1,
+        ],
         names=["date", options.get("label", "dmm")],
     )
     data.date = pd.to_datetime(
@@ -1490,19 +1372,26 @@ def parse_data_logger_short_dmm_frank(filename, options, delimiter=",", **kwargs
         filename,
         comment="#",
         header=None,
-        usecols=[0, 1,],
+        usecols=[
+            0,
+            1,
+        ],
         names=["date", options.get("label", "dmm")],
     )
-    data.date = pd.to_timedelta(data.date, unit='s')
+    data.date = pd.to_timedelta(data.date, unit="s")
     data.date = pd.to_datetime(
-        "1970-01-01", utc=True,
-    )  + pd.to_timedelta(data.date, unit='s')  # It is faster to parse the dates *after* parsing the csv file
+        "1970-01-01",
+        utc=True,
+    ) + pd.to_timedelta(
+        data.date, unit="s"
+    )  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         if key in data:
             data[key] = scaling_function(data)
 
     return data, 0
+
 
 def noise_gen(filename, options, **kwargs):
     from random import seed
@@ -1533,23 +1422,22 @@ def noise_gen(filename, options, **kwargs):
     df = pd.DataFrame({"date": np.arange(N), "value": tod})
     return df, 0
 
+
 def parse_data_dgdrive_powermeter(filename, options, delimiter=",", **kwargs):
     data = pd.read_csv(
         filename,
         comment="#",
         header=None,
-        usecols=[0, 1,2,3],
+        usecols=[0, 1, 2, 3],
         names=["date", "dgdrive", "pm400", "34470a"],
     )
-    data.date = pd.to_datetime(
-        data.date, utc=True
-    )  # It is faster to parse the dates *after* parsing the csv file
+    data.date = pd.to_datetime(data.date, utc=True)  # It is faster to parse the dates *after* parsing the csv file
 
     for key, scaling_function in options.get("scaling", {}).items():
         data[key] = scaling_function(data)
 
-
     return data, 0
+
 
 def parse_data_ltspice_fets(filename, options, **kwargs):
     data = pd.read_csv(
@@ -1566,6 +1454,7 @@ def parse_data_ltspice_fets(filename, options, **kwargs):
         data[key] = scaling_function(data)
 
     return data, 0
+
 
 def parse_bode100_file(filename, options, **kwargs):
     starting_row = None
@@ -1591,7 +1480,7 @@ def parse_bode100_file(filename, options, **kwargs):
     data = pd.read_csv(
         filename,
         skiprows=starting_row,
-        nrows=final_row-starting_row,
+        nrows=final_row - starting_row,
         delimiter=",",
         usecols=options["columns"].keys(),
         names=options["columns"].values(),
@@ -1600,7 +1489,7 @@ def parse_bode100_file(filename, options, **kwargs):
     for key, scaling_function in options.get("scaling", {}).items():
         data[key] = scaling_function(data)
 
-    return data,0
+    return data, 0
 
 
 FILE_PARSER = {
