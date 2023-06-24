@@ -37,7 +37,7 @@ plot = {
             },
             "files": [
                 {
-                    "filename": "Fluke5440B_vs_DMMs_2022-10-04_12:16:21+00:00.csv",
+                    "filename": "adev_plots/Fluke5440B_vs_DMMs_2022-10-04_12:16:21+00:00.zip",
                     "show": True,
                     "parser": "ltspice_fets",
                     "options": {

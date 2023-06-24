@@ -39,7 +39,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "mosfet_current_source_parallel_mc.csv",
+            "filename": "histogram_plots/mosfet_current_source_parallel_mc.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -50,7 +50,7 @@ plot = {
             },
         },
         {
-            "filename": "mosfet_current_source_single_mc.csv",
+            "filename": "histogram_plots/mosfet_current_source_single_mc.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -61,7 +61,7 @@ plot = {
             },
         },
         {
-            "filename": "mosfet_current_source_parallel_mc-sigma.csv",
+            "filename": "histogram_plots/mosfet_current_source_parallel_mc-sigma.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

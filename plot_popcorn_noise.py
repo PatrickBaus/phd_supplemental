@@ -332,7 +332,7 @@ if __name__ == "__main__":
             },
             "files": [
                 {
-                    "filename": "LM399_popcorn_noise_test_2022-08-19_18:00:34+00:00.csv",
+                    "filename": "popcorn_noise_plots/LM399_popcorn_noise_test_2022-08-19_18:00:34+00:00.zip",
                     "show": True,
                     "parser": "ltspice_fets",
                     "options": {

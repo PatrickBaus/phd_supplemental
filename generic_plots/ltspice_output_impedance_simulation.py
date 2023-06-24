@@ -32,7 +32,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "mosfet_current_source_output_impedance.csv",
+            "filename": "generic_plots/mosfet_current_source_output_impedance.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

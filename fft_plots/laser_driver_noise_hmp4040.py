@@ -62,7 +62,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "./current_source_noise/dgDrive-500_2-3-0.csv",
+            "filename": "fft_plots//current_source_noise/dgDrive-500_2-3-0.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -76,7 +76,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/dgDrive-500_2-1-0_hmp4040.csv",
+            "filename": "fft_plots/current_source_noise/dgDrive-500_2-1-0_hmp4040.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -90,7 +90,7 @@ plot = {
             },
         },
         {
-            "filename": "current_regulator_v3_AD797+TIA_simple.txt",
+            "filename": "fft_plots/current_source_noise/current_regulator_v3_AD797+TIA_simple.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

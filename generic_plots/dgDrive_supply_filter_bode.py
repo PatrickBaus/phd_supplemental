@@ -31,7 +31,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "DgDrive_PSRR_take2_2023-02-18T01_12_08.csv",
+            "filename": "generic_plots/DgDrive_PSRR_take2_2023-02-18T01_12_08.zip",
             "show": True,
             "parser": "bode100",
             "options": {
@@ -46,7 +46,7 @@ plot = {
             },
         },
         {
-            "filename": "input_filter_dgdrive.csv",
+            "filename": "generic_plots/input_filter_dgdrive.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

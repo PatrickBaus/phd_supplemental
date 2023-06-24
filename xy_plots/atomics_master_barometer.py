@@ -87,7 +87,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "laser_drift_015.csv",
+            "filename": "xy_plots/laser_drift_015.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

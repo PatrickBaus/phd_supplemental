@@ -45,7 +45,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "mosfet_current_source.csv",
+            "filename": "generic_plots/mosfet_current_source.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

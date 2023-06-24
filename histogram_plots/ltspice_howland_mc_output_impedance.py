@@ -55,7 +55,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "howland_current_source_001.txt",
+            "filename": "histogram_plots/howland_current_source_001.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -65,7 +65,7 @@ plot = {
             },
         },
         {
-            "filename": "howland_current_source_005.txt",
+            "filename": "histogram_plots/howland_current_source_005.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -75,7 +75,7 @@ plot = {
             },
         },
         {
-            "filename": "improved_howland_current_source_001.txt",
+            "filename": "histogram_plots/improved_howland_current_source_001.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -85,7 +85,7 @@ plot = {
             },
         },
         {
-            "filename": "improved_howland_current_source_005.txt",
+            "filename": "histogram_plots/improved_howland_current_source_005.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

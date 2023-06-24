@@ -86,7 +86,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "HP3458A_UKL_330uF_leakage_2019-12-27_11:25:34+00:00.csv",
+            "filename": "xy_plots/HP3458A_UKL_330uF_leakage_2019-12-27_11:25:34+00:00.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

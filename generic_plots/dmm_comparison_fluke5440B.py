@@ -67,7 +67,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "data-1664633967407.csv",
+            "filename": "generic_plots/data-1664633967407.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

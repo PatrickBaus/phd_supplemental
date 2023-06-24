@@ -72,7 +72,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "./current_source_noise/lna_background.csv",
+            "filename": "fft_plots/current_source_noise/lna_background.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -84,7 +84,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/dgDrive-500_2-3-0.csv",
+            "filename": "fft_plots/current_source_noise/dgDrive-500_2-3-0.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -98,7 +98,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/tia_background_1k.csv",
+            "filename": "fft_plots/current_source_noise/tia_background_1k.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -110,7 +110,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/toptica_dcc_110.csv",
+            "filename": "fft_plots/current_source_noise/toptica_dcc_110.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -122,7 +122,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/moglabs_dlc_202.csv",
+            "filename": "fft_plots/current_source_noise/moglabs_dlc_202.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -134,7 +134,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/vescent_d2-105-500_no_display.csv",
+            "filename": "fft_plots/current_source_noise/vescent_d2-105-500_no_display.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -146,7 +146,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/smc11.csv",
+            "filename": "fft_plots/current_source_noise/smc11.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -160,7 +160,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/LQprO-140.csv",
+            "filename": "fft_plots/current_source_noise/LQprO-140.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -172,7 +172,7 @@ plot = {
             },
         },
         {
-            "filename": "current_regulator_v3_AD797+TIA_simple.txt",
+            "filename": "fft_plots/current_source_noise/current_regulator_v3_AD797+TIA_simple.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

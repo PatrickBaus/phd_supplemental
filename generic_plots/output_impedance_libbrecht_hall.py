@@ -34,7 +34,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "modulation_input_LibrechtHall.txt",
+            "filename": "generic_plots/modulation_input_LibrechtHall.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -45,7 +45,7 @@ plot = {
             },
         },
         {
-            "filename": "modulation_input_LibrechtHall_1u.txt",
+            "filename": "generic_plots/modulation_input_LibrechtHall_1u.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

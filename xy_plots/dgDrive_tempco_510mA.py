@@ -86,7 +86,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "DgDrive-2-3-1_Tempco_2021-03-23_14:41:01+00:00.csv",  # Fixed direction. Going up now
+            "filename": "xy_plots/DgDrive-2-3-1_Tempco_2021-03-23_14:41:01+00:00.zip",  # Fixed direction. Going up now
             "show": True,
             "parser": "ltspice_fets",
             "options": {

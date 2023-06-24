@@ -38,7 +38,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "DgDrive_output_impedance_3M3_10PLC_AZ.csv",
+            "filename": "generic_plots/DgDrive_output_impedance_3M3_10PLC_AZ.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

@@ -47,7 +47,7 @@ plot = {
             },
             "files": [
                 {
-                    "filename": "DMM_shorted_input_3458a_2022-11-19_08:42:49+00:00.csv",
+                    "filename": "adev_plots/DMM_shorted_input_3458a_2022-11-19_08:42:49+00:00.zip",
                     "show": True,
                     "parser": "ltspice_fets",
                     "options": {
@@ -61,7 +61,7 @@ plot = {
                     },
                 },
                 {
-                    "filename": "DMM_shorted_input_k2002_2022-11-21_08:19:36+00:00.csv",
+                    "filename": "adev_plots/DMM_shorted_input_k2002_2022-11-21_08:19:36+00:00.zip",
                     "show": True,
                     "parser": "ltspice_fets",
                     "options": {
@@ -75,7 +75,7 @@ plot = {
                     },
                 },
                 {
-                    "filename": "DMM_shorted_input_k2002_2022-12-06_21:21:42+00:00.csv",
+                    "filename": "adev_plots/DMM_shorted_input_k2002_2022-12-06_21:21:42+00:00.zip",
                     "show": False,
                     "parser": "ltspice_fets",
                     "options": {
@@ -89,7 +89,7 @@ plot = {
                     },
                 },
                 {
-                    "filename": "DMM_shorted_input_34470a_2022-12-02_16:56:31+00:00.csv",
+                    "filename": "adev_plots/DMM_shorted_input_34470a_2022-12-02_16:56:31+00:00.zip",
                     "show": True,
                     "parser": "ltspice_fets",
                     "options": {
@@ -103,7 +103,21 @@ plot = {
                     },
                 },
                 {
-                    "filename": "DMM_shorted_input_dmm6500_2022-11-21_13:47:07+00:00.csv",
+                    "filename": "adev_plots/DMM_shorted_input_34470a_2022-11-29_11:49:13+00:00.zip",
+                    "show": False,
+                    "parser": "ltspice_fets",
+                    "options": {
+                        "columns": {
+                            0: "date",
+                            1: "34470a_noaz",
+                        },
+                        "scaling": {
+                            "date": lambda data: pd.to_datetime(data.date, utc=True, format="ISO8601"),
+                        },
+                    },
+                },
+                {
+                    "filename": "adev_plots/DMM_shorted_input_dmm6500_2022-11-21_13:47:07+00:00.zip",
                     "show": True,
                     "parser": "ltspice_fets",
                     "options": {

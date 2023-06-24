@@ -61,7 +61,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "input_filter_dgdrive.csv",
+            "filename": "generic_plots/input_filter_dgdrive.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

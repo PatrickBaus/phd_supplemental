@@ -1,12 +1,15 @@
 from __future__ import division
 
 import datetime
+import io
+import os
 import re
 from itertools import islice
 
 import dateutil
 import numpy as np
 import pandas as pd
+import zipfile
 
 
 def lookup(s):
@@ -1457,25 +1460,39 @@ def parse_data_ltspice_fets(filename, options, **kwargs):
 
 
 def parse_bode100_file(filename, options, **kwargs):
-    starting_row = None
-    final_row = None
     selected_trace = options.get("trace", 0)
-    current_trace = 0
 
-    with open(filename) as lines:
+    def read_file(lines):
+        start = None
+        stop = None
+        current_trace = 0
+
         for row_num, line in enumerate(lines):
-            if starting_row is None and line == "------\n":
-                starting_row = row_num + 2  # Skip this row + header
-            if starting_row is not None and line == "\n":
+            if start is None and line == "------\n":
+                start = row_num + 2  # Skip this row + header
+            if start is not None and line == "\n":
                 if current_trace == selected_trace:
-                    final_row = row_num
+                    stop = row_num
                     break
                 else:
-                    starting_row = row_num + 2  # Skip this row + header
+                    start = row_num + 2  # Skip this row + header
                     current_trace += 1
+        if start is None or stop is None or selected_trace != current_trace:
+            raise Exception(f"Invalid data file or incorrect trace selected: {filename}")
 
-    if starting_row is None or final_row is None or selected_trace != current_trace:
-        raise Exception(f"Invalid data file or incorrect trace selected: {filename}")
+        return start, stop
+
+    _, ext = os.path.splitext(filename)
+    if ext == ".zip":
+        with zipfile.ZipFile(filename) as zip_file:
+            if len(zip_file.namelist()) == 1:
+                with zip_file.open(zip_file.namelist()[0]) as lines:
+                    # The zip file is byte encoded, convert to utf-8 first
+                    starting_row, final_row = read_file(io.TextIOWrapper(lines, "utf-8"))
+    else:
+        with open(filename) as lines:
+            starting_row, final_row = read_file(lines)
+
 
     data = pd.read_csv(
         filename,

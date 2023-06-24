@@ -45,7 +45,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "./current_source_noise/vescent_d2-105-500_no_display_2kHz.csv",
+            "filename": "fft_plots/current_source_noise/vescent_d2-105-500_no_display_2kHz.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -57,7 +57,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/vescent_d2-105-500_300mA.csv",
+            "filename": "fft_plots/current_source_noise/vescent_d2-105-500_300mA.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -69,7 +69,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/vescent_d2-105-500_400mA.csv",
+            "filename": "fft_plots/current_source_noise/vescent_d2-105-500_400mA.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -81,7 +81,7 @@ plot = {
             },
         },
         {
-            "filename": "./current_source_noise/vescent_d2-105-500_450mA.csv",
+            "filename": "fft_plots/current_source_noise/vescent_d2-105-500_450mA.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

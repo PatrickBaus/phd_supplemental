@@ -31,7 +31,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "kraken_database_counts.csv",
+            "filename": "generic_plots/kraken_database_counts.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

@@ -29,7 +29,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "hot_swap.txt",
+            "filename": "generic_plots/hot_swap.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

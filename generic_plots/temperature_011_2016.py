@@ -33,7 +33,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "011_neon_temperature_2016-11 00-00-00-26_2016-11-27 00-00-00.csv",
+            "filename": "generic_plots/011_neon_temperature_2016-11 00-00-00-26_2016-11-27 00-00-00.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

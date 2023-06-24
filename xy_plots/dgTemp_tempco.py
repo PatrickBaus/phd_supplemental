@@ -87,7 +87,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "Rev2_INL_2019-07-02_08:08:20+00:00.csv",
+            "filename": "generic_plots/Rev2_INL_2019-07-02_08:08:20+00:00.zip",  # Shared with the stability plot
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -113,7 +113,7 @@ plot = {
             },
         },
         {
-            "filename": "fluke1524_2019-07-01_12:59:50+00:00.csv",  # Fixed direction. Going up now
+            "filename": "xy_plots/fluke1524_2019-07-01_12:59:50+00:00.zip",  # Fixed direction. Going up now
             "show": True,
             "parser": "fluke1524",
             "options": {

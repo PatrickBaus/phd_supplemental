@@ -64,7 +64,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "DgDrive_modulation_input.csv",
+            "filename": "generic_plots/DgDrive_modulation_input.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

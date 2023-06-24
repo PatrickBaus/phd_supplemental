@@ -86,7 +86,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "HP3458A_MKS4_150uF_50V_leakage_2020-03-19_13:51:19+00:00.csv",
+            "filename": "xy_plots/HP3458A_MKS4_150uF_50V_leakage_2020-03-19_13:51:19+00:00.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

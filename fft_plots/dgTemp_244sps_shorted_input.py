@@ -33,7 +33,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "./dgTemp_noise/dgTemp_244sps_shorted_input.csv",
+            "filename": "./fft_plots/dgTemp_244sps_shorted_input.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {

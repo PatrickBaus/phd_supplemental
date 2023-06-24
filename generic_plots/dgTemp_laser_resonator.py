@@ -60,8 +60,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "ADC_Serial_Read_2018-10-17_07:54:38+00:00.csv",
-            "filename": "ADC_Serial_Read_2018-10-15_10:25:38+00:00.csv",
+            "filename": "generic_plots/ADC_Serial_Read_2018-10-15_10:25:38+00:00.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -80,7 +79,7 @@ plot = {
             },
         },
         {
-            "filename": "sensorData_2019-06-30 22_00_00_2019-07-18 06_34_00.csv",
+            "filename": "generic_plots/sensorData_2019-06-30 22_00_00_2019-07-18 06_34_00.zip",
             "show": False,
             "parser": "smi",
             "options": {
