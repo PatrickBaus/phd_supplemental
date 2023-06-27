@@ -10,6 +10,11 @@ import numpy as np
 
 import seaborn as sns
 
+# Select a color style. We do not use plt.style.use(), because the colors need to assigned in a fixed order according
+# to the power law plot
+colors = sns.color_palette("colorblind")
+__version__ = "0.9.0"
+
 # Use these settings for the PhD thesis
 tex_fonts = {
     "text.usetex": True,  # Use LaTeX to write all text
@@ -37,11 +42,6 @@ tex_fonts = {
 }
 plt.rcParams.update(tex_fonts)
 # end of settings
-
-# Select a color style. We do not use plt.style.use(), because the colors need to assigned in a fixed order according
-# to the power law plot
-colors = sns.color_palette("colorblind")
-__version__ = "0.9.0"
 
 
 def bin_psd(x_data, y_data, bins):
