@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import argparse
-import ast
 import glob
 import importlib
 import os
@@ -11,7 +10,6 @@ import matplotlib.legend
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from matplotlib.ticker import ScalarFormatter
 
 pd.plotting.register_matplotlib_converters()
