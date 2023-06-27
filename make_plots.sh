@@ -11,4 +11,5 @@ cd simulations
 ./sim_pid_controller_bode.py --silent
 ./sim_pid_controller.py --silent
 ./sim_output_impedance_mc.py --silent
+./sim_allan_variance.py --silent
 deactivate
