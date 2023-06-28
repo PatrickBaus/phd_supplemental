@@ -54,7 +54,7 @@ def bin_psd(x_data, y_data, bins):
         x_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
         y_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
 
-    return x_binned, y_binned
+    return x_binned[~np.isnan(x_binned)], y_binned[~np.isnan(y_binned)]
 
 
 def downsample_data(x_data, y_data):
@@ -174,8 +174,8 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
 
             print(f"  Plotting {len(freqs[1:])} values.")
             (lines,) = ax.loglog(
-                freqs[1:],
-                [ha * pow(freq, beta + 2) for freq in freqs[1:]],
+                freqs,
+                [ha * pow(freq, beta + 2) for freq in freqs],
                 "--",
                 label=f"$h_{{{beta+2}}}f^{{{beta+2}}}$",
                 color=beta_colors[beta],
