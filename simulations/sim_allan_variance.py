@@ -172,7 +172,7 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
             bins = np.logspace(np.floor(np.log10(np.min(freqs[1:]))), np.ceil(np.log10(np.max(freqs))), num=200)
             freqs, psd = bin_psd(freqs, psd, bins=bins)
 
-            print(f"  Plotting {len(freqs[1:])} values.")
+            print(f"  Plotting {len(freqs)} values.")
             (lines,) = ax.loglog(
                 freqs,
                 [ha * pow(freq, beta + 2) for freq in freqs],
