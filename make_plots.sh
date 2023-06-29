@@ -14,4 +14,5 @@ cd simulations
 ./sim_allan_variance.py --silent
 ./sim_burst_noise.py --silent
 ./sim_flicker_noise_envelope.py --silent
+./sim_allan_variance_examples.py --silent
 deactivate
