@@ -236,24 +236,8 @@ def plot_noise(colored_noise: dict, betas, plot_types, show_plot_window: bool, p
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$")
 
-    # fig.set_size_inches(11.69,8.27)   # A4 in inch
-    # fig.set_size_inches(128/25.4 * 2.7 * 0.8, 96/25.4 * 1.5 * 0.8)  # Latex Beamer size 128 mm by 96 mm
-    if len(betas) == 1:
-        phi = 0.75  # use 0.75 for publication
-    else:
-        phi = (5**0.5 - 1) / 2 if plot_direction == "horizontal" else (5**0.5 + 1) / 2  # golden ratio
-    if len(betas) == 1:
-        scale = 0.4  # scale to 2/3 for combined plots and use 0.4 for mini plots
-    else:
-        scale = 2 / 3  # scale to 2/3 for combined plots
-
     fig.set_size_inches(plot_settings["plot_size"])
 
-    #fname = "../../images/example_white_time.pgf"
-    #fname = "../../images/example_flicker_time.pgf"
-    #fname = "../../images/example_rw_time.pgf"
-    #fname = "../../images/example_time.pgf"
-    #fname = None
     if plot_settings["fname"]:
         print(f"Saving image to '{plot_settings['fname']}'")
         plt.savefig(plot_settings["fname"])
@@ -278,7 +262,7 @@ if __name__ == "__main__":
 
     phi = 0.75  # use 0.75 for the thesis
     scale = 0.4  # scale to 2/3 for combined plots and use 0.4 for mini plots
-    noise_types = [(-2, "white", (-6.5, 6.5)), (-3, "flicker", (-15, 15)), (-4, "random_walk", (-200, 250))]
+    noise_types = [(-2, "white", (-250, 250)), (-3, "flicker", (-60, 50)), (-4, "random_walk", (-50, 180))]
     plot_types = ["amplitude", ]
 
     colored_noise = generate_noise()
