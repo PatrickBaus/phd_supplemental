@@ -131,7 +131,7 @@ def plot_noise(colored_noise: dict, betas, plot_types, show_plot_window: bool, p
             -4: 1e2,
         }
         # downsample the data to logscale bins
-        bins=np.logspace(-1, 6, num=200)
+        bins = np.logspace(np.floor(np.log10(np.min(freqs[1:]))), np.ceil(np.log10(np.max(freqs))), num=200)
         freqs, psd = bin_psd(freqs, psd, bins=bins)
 
         # compute amplitude PSD prefactor h_a
