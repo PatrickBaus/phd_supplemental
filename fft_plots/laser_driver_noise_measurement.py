@@ -72,7 +72,7 @@ plot = {
     },
     "files": [
         {
-            "filename": "fft_plots/current_source_noise/lna_background.zip",
+            "filename": "fft_plots/current_source_noise/lna_10R_background.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
