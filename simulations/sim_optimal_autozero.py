@@ -193,6 +193,6 @@ if __name__ == "__main__":
 
         plot_settings = {
             "plot_size": (441.01773 / 72.27 * scale, 441.01773 / 72.27 * scale * phi),
-            "fname": f"../../images/autozero_{'deadtime' if dead_time else ''}_nplcs_adev.pgf",
+            "fname": f"../../images/autozero{'_deadtime' if dead_time else ''}_nplcs_adev.pgf",
         }
         plot_noise(amplitude=amplitude, amplitudes_az=amplitudes_az, dead_time=dead_time, show_plot_window=not args.silent, plot_settings=plot_settings)
