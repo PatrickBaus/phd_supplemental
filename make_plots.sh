@@ -16,4 +16,5 @@ cd simulations
 ./sim_flicker_noise_envelope.py --silent
 ./sim_allan_variance_examples.py --silent
 ./sim_autozero.py --silent
+./sim_optimal_autozero.py --silent
 deactivate

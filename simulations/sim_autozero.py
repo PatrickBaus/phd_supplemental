@@ -93,16 +93,8 @@ def generate_noise():
         for beta in labels.keys()
     }
 
-    colored_noise = [
-        at.Noise(nr+2, adev0**2 / (2 * (2 * np.pi) ** -2 * tau0 ** (-2 + 1) * (2 * np.pi) ** 2), -2),  # white noise
-        at.Noise(nr+2, adev0**2 * f_c / (2 * (2 * np.pi) ** -3 * tau0 ** (-3 + 1) * (2 * np.pi) ** 2), -3),   # flicker noise
-        #at.Noise(nr, adev0 / 200 / (2 * (2 * np.pi) ** -3 * tau0 ** (-4 + 1) * (2 * np.pi) ** 2), -4),   # random-walk noise
-    ]
+    colored_noise = [at.Noise(nr, qd[beta], beta) for beta in (-2,-3)]
 
-    # Generate noise: white (beta=-2), flicker (beta=-3), random-walk (beta=-4)
-    # See below for the reason of generating two more sample points (nr+2).
-    # We need to generate *all* noises, because the random numbers must be drawn in order to result in the same plots
-    #colored_noise = {beta: at.Noise(nr+2, qd[beta], beta) for beta in labels.keys()}
     for noise in colored_noise:
         print(
             f"Generating {labels[noise.b].lower()} -> Q_d: {noise.qd} beta: {noise.b} tau0: {tau0} h_alpha: {noise.frequency_psd_from_qd(tau0)}")
@@ -117,10 +109,7 @@ def plot_noise(colored_noise, apply_az: bool, plot_types: list[str], show_plot_w
     tau0 = 1/50 * 10  # sample interval (NPLC=10)
     FS = 1.0 / tau0
     offset = 10
-    plots_to_show = ["amplitude"]  # ["amplitude", "psd", "adev"]
-    #plots_to_show = ["psd"]  # ["amplitude", "psd", "adev"]
     plot_direction = "horizontal"
-    #apply_az = False  # Apply the offset-nulling algorithm
     labels = {
         -2: "White noise",
         -3: "Flicker noise",
@@ -305,11 +294,3 @@ if __name__ == "__main__":
             "ylim": (-4.5e-6+10, 4.5e-6+10) if plot_type == "amplitude" else (None, None),
         }
         plot_noise(colored_noise=colored_noise, apply_az=False, plot_types=[plot_type, ], show_plot_window=not args.silent, plot_settings=plot_settings)
-
-    for plot_type in plot_types:
-        plot_settings = {
-            "plot_size": (441.01773 / 72.27 * scale, 441.01773 / 72.27 * scale * phi),
-            "fname": f"../../images/autozero_{plot_type}.pgf",
-            "ylim": (-4.5e-6+10, 4.5e-6+10) if plot_type == "amplitude" else (None, None),
-        }
-        plot_noise(colored_noise=colored_noise, apply_az=True, plot_types=[plot_type, ], show_plot_window=not args.silent, plot_settings=plot_settings)
