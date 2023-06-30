@@ -245,9 +245,6 @@ def plot_series(plot, show_plot_window):
     plt.close(fig)
 
 
-phi = (5**0.5 - 1) / 2  # golden ratio
-
-
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generic plot generator for line and scatter plots.")
     parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
