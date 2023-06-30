@@ -6,6 +6,7 @@ source env/bin/activate
 ./plot_fft.py --silent "fft_plots/*.py"
 ./plot_allan_variance.py --silent "adev_plots/*.py"
 ./plot_popcorn_noise.py --silent
+./fit_kraken.py --silent "fits/*.py"
 cd simulations
 ./sim_laplace_fopdt.py --silent
 ./sim_pid_controller_bode.py --silent
