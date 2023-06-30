@@ -311,13 +311,9 @@ def plot_series(plot, show_plot_window):
                 )
 
     fig = plt.gcf()
-    #  fig.set_size_inches(11.69,8.27)   # A4 in inch
-    #  fig.set_size_inches(128/25.4 * 2.7 * 0.8, 96/25.4 * 1.5 * 0.8)  # Latex Beamer size 128 mm by 96 mm
+
     if plot.get("plot_size"):
         fig.set_size_inches(*plot["plot_size"])
-    else:
-        phi = (5**0.5 - 1) / 2  # golden ratio
-        fig.set_size_inches(441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi * 2)  # y * 2 for 2 plots
     if plot.get("title") is not None:
         plt.suptitle(plot["title"], fontsize=16)
 
@@ -355,8 +351,3 @@ if __name__ == "__main__":
             plot_series(plot=module.plot, show_plot_window=not args.silent)
         except FileNotFoundError as exc:
             print(f"  Data file not found. Cannot plot graph: {exc}")
-
-    # plots = (plot for plot in plots if plot.get('show', True))
-    # for plot in plots:
-    #  print("Ploting {plot!s}".format(plot=plot['title']))
-    #  plot_series(plot=plot)

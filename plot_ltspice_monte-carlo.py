@@ -237,13 +237,9 @@ def plot_series(plot, show_plot_window):
         plt.legend(lines, labels, loc="best")
 
     fig = plt.gcf()
-    #  fig.set_size_inches(11.69,8.27)   # A4 in inch
-    #  fig.set_size_inches(128/25.4 * 2.7 * 0.8, 96/25.4 * 1.5 * 0.8)  # Latex Beamer size 128 mm by 96 mm
-    phi = (5**0.5 - 1) / 2  # golden ratio
+
     if plot.get("plot_size"):
         fig.set_size_inches(*plot["plot_size"])
-    else:
-        fig.set_size_inches(441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi)
     if plot.get("title") is not None:
         plt.suptitle(plot["title"], fontsize=16)
 
@@ -259,9 +255,6 @@ def plot_series(plot, show_plot_window):
         plt.show()
 
     plt.close(fig)
-
-
-phi = (5**0.5 - 1) / 2  # golden ratio
 
 
 def init_argparse() -> argparse.ArgumentParser:
