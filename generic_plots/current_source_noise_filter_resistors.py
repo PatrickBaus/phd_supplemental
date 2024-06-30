@@ -7,6 +7,7 @@ plot = {
     "show": True,
     "output_file": {"fname": "../images/current_source_noise_filter_resistors.pgf"},
     "plot_size": (441.01773 / 72.27 * 0.89, 441.01773 / 72.27 * 0.89 * phi),
+    "plot_padding": 1.08,  # padding between the figure edge and the edges of subplots, as a fraction of the font-size.
     "crop_secondary_to_primary": True,
     "legend_position": "best",
     "primary_axis": {
