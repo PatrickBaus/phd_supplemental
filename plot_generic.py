@@ -229,7 +229,11 @@ def plot_series(plot, show_plot_window):
     if plot.get("title") is not None:
         plt.suptitle(plot["title"], fontsize=16)
 
-    plt.tight_layout()
+    if plot.get("plot_padding"):
+        # Disable padding. Padding is done by latex. Padding should be >= 0.1 for special characters.
+        plt.tight_layout(pad=plot["plot_padding"])
+    else:
+        plt.tight_layout(pad=1.08)
     if plot.get("title") is not None:
         plt.subplots_adjust(top=0.88)
     if plot.get("output_file"):
