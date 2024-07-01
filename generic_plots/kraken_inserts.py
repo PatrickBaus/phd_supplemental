@@ -7,6 +7,7 @@ plot = {
     "description": r"Labkraken",
     "show": True,
     "output_file": {"fname": "../images/kraken_inserts.pgf"},
+    "plot_size": (441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi),  # FIXME: Change size scalar to 0.89
     # 'crop': ['2017-12-03 00:00:00', '2017-12-04 00:00:00'],
     # "legend_position": "lower center",
     "crop_secondary_to_primary": True,
@@ -26,6 +27,7 @@ plot = {
             "counts": {
                 "label": r"\unit{inserts \per \day}",
                 "color": colors[0],
+                "downsample": False,
             },
         },
     },

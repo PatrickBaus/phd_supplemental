@@ -176,11 +176,13 @@ def prepare_axis(ax, axis_settings):
 
 
 def plot_data(ax, data, x_axis, column_settings):
+    settings: dict
     for column, settings in column_settings.items():
         if column in data:
             print(f"  Integrated noise: {np.sqrt(np.mean(data[column]**2))}")
             data_to_plot = data[[x_axis, column]].dropna()
-            if len(data_to_plot) > 1000:
+            # pop the "downsample" key because it cannot be passed to ax.plot
+            if settings.pop("downsample", True) and len(data_to_plot) > 1000:
                 x_data, y_data = downsample_data(*(data_to_plot[idx] for idx in data_to_plot))
             else:
                 x_data, y_data = (data_to_plot[idx] for idx in data_to_plot)
