@@ -8,6 +8,7 @@ plot = {
     "show": False,
     "output_file": {"fname": "../images/hot_swap.pgf"},
     "crop_secondary_to_primary": True,
+    "plot_size": (441.01773 * 0.6 * 0.75 / 72.27, 441.01773 * 0.6 * 0.75 / 72.27 * phi),
     "legend_position": "best",
     "primary_axis": {
         "axis_settings": {
@@ -24,6 +25,7 @@ plot = {
             "vout": {
                 "label": "Input voltage",
                 "color": colors[0],
+                "linewidth": 1,
             },
         },
     },
