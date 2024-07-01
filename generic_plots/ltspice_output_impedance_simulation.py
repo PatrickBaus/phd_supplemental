@@ -13,7 +13,6 @@ plot = {
             "y_label": r"Ouput Impedance $R_{out}$ in \unit{\ohm}",
             "invert_x": False,
             "invert_y": False,
-            "fixed_order": 9,
             "y_scale": "log",
             # "x_scale": "log",  # Turn this on to show, that R_out is a power law
         },
