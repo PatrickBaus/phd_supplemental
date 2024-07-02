@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 
 colors = sns.color_palette("colorblind")
-cmap = sns.color_palette("ch:s=-.25,rot=-.25_r", as_cmap=True)
+cmap = sns.color_palette("ch:s=.25,rot=-.25", as_cmap=True)
 phi = (5**0.5 - 1) / 2  # golden ratio
 plot = {
     "description": "Leakage Current WIMA MKS4",
