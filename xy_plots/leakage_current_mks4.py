@@ -12,11 +12,13 @@ plot = {
         "crop_index": "date",
         "crop": ["2020-03-19 20:00:00", "2023-03-20 10:11:49"],
     },
+    "plot_size": (441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi * 2),
     "output_file": {
         "fname": "../images/leakage_current_mks4.pgf",
     },
     "legend_position": "upper right",
     "primary_axis": {
+        "show": True,
         "axis_settings": {
             "x_label": r"Time (UTC)",
             "y_label": r"Leakage current in \unit{\A}",
@@ -56,6 +58,7 @@ plot = {
         },
     },
     "xy_plot": {
+        "show": True,
         "legend_position": "upper left",
         "x-axis": "temperature",
         "y-axis": "value",

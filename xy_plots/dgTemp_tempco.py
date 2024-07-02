@@ -18,6 +18,7 @@ plot = {
     "plot_size": (441.01773 / 72.27 * 0.8, 441.01773 / 72.27 * 0.8 * phi * 2),
     "legend_position": "upper left",
     "primary_axis": {
+        "show": True,
         "axis_settings": {
             "x_label": r"Time (UTC)",
             "y_label": r"Resistance deviation in \unit{\ohm}",
@@ -57,6 +58,7 @@ plot = {
         },
     },
     "xy_plot": {
+        "show": True,
         "legend_position": "upper right",
         "x-axis": "temperature",
         "y-axis": "value_ext",

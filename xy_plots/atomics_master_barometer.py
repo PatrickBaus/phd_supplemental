@@ -18,6 +18,7 @@ plot = {
     "plot_size": (441.01773 / 72.27 * 0.89, 441.01773 / 72.27 * 0.89 * ((5**0.5 - 1) / 2)),
     "legend_position": "upper left",
     "primary_axis": {
+        "show": True,
         "axis_settings": {
             "x_label": r"Time (UTC)",
             "y_label": r"Pressue in \unit{\hecto\pascal}",
@@ -57,6 +58,7 @@ plot = {
         },
     },
     "xy_plot": {
+        "show": True,
         "legend_position": "upper right",
         "x-axis": "air_pressure",
         "y-axis": "piezo_voltage",

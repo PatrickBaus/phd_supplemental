@@ -15,8 +15,10 @@ plot = {
     "output_file": {
         "fname": "../images/dgDrive_tempco_50mA.pgf",
     },
+    "plot_size": (441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi * 2),
     "legend_position": "upper right",
     "primary_axis": {
+        "show": True,
         "axis_settings": {
             "x_label": r"Time (UTC)",
             "y_label": r"Current deviation in \unit{\A}",
@@ -56,6 +58,7 @@ plot = {
         },
     },
     "xy_plot": {
+        "show": True,
         "legend_position": "upper left",
         "x-axis": "temperature",
         "y-axis": "value",
