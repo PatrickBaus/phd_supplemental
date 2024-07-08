@@ -186,7 +186,7 @@ fig = plt.gcf()
 #  fig.set_size_inches(128/25.4 * 2.7 * 0.8, 96/25.4 * 1.5 * 0.8)  # Latex Beamer size 128 mm by 96 mm
 phi = (5**.5-1) / 2  # golden ratio
 fig.set_size_inches(
-    441.01773 / 72.27 * 0.89, 441.01773 / 72.27 * 0.89 * phi
+    441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi  # FIXME: reduce factor to 0.89
 )  # TU thesis
 plt.tight_layout()
 

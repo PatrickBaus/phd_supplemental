@@ -182,7 +182,7 @@ def prepare_axis(ax, axis_settings, color_map=None):
 def fit_data(data, x_axis, y_axis):
     model = ols(f"{y_axis} ~ {x_axis}", data).fit()
 
-    # Calculate uncertainty for 1 sigma from the standard error
+    # Calculate uncertainty for 3 sigma from the standard error
     uncertainty = (
         model.bse * stats.t.interval(0.997300203936740, len(data) - 1)[1]
     )  # 1 sigma (1-alpha = 0.682689492137086) = 68%, 2 sigma = 0.954499736103642, 3 sigma = 0.997300203936740, etc

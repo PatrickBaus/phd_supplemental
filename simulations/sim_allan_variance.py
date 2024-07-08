@@ -122,7 +122,7 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
     if "adev" in plots_to_show:
         # compute ADEV
         adevs = [at.totdev(noise.time_series, rate=FS, taus="decade")[:2] for noise in colored_noise]
-        drift_taus, drift_adev, *_ = at.totdev(drift_amplitude, data_type="freq", rate=FS, taus="decade")
+        drift_taus, drift_adev, *_ = at.oadev(drift_amplitude, data_type="freq", rate=FS, taus="decade") # FIXME: Change to totdev
 
     fig, axs = plt.subplots(
         len(plots_to_show) if plot_direction != "horizontal" else 1,
@@ -169,13 +169,16 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
         )
         for beta, (freqs, psd), ha in zip(filter(lambda beta: beta > -5, betas), psds, has):
             # Downsample the psd
-            bins = np.logspace(np.floor(np.log10(np.min(freqs[1:]))), np.ceil(np.log10(np.max(freqs))), num=200)
-            freqs, psd = bin_psd(freqs, psd, bins=bins)
+            # FIXME: Enable downsampling
+            #bins = np.logspace(np.floor(np.log10(np.min(freqs[1:]))), np.ceil(np.log10(np.max(freqs))), num=200)
+            #freqs, psd = bin_psd(freqs, psd, bins=bins)
 
             print(f"  Plotting {len(freqs)} values.")
             (lines,) = ax.loglog(
-                freqs,
-                [ha * pow(freq, beta + 2) for freq in freqs],
+#                freqs,
+#                [ha * pow(freq, beta + 2) for freq in freqs],
+                [freq for freq in freqs if freq != 0 or beta >= -2],
+                [ha * pow(freq, beta + 2) for freq in freqs if freq != 0 or beta >= -2],
                 "--",
                 label=f"$h_{{{beta+2}}}f^{{{beta+2}}}$",
                 color=beta_colors[beta],
@@ -218,7 +221,7 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
         ax.grid(True, which="minor", ls="-", color="0.85")
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])  # Set limits, so that all plots look the same
-        ax.set_xlim(None, 5e3)  # Set limits, so that all plots look the same
+        ax.set_xlim(None, 6e3)  # Set limits, so that all plots look the same, FIME: Check whether 5e3 is ok
         # ax.set_title(r'Allan Deviation')
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$")
