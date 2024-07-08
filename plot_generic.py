@@ -111,14 +111,14 @@ def crop_data(data, crop_index="date", crop=None):
     #    print(f"    End date:   {data.date.iloc[-1].tz_convert('Europe/Berlin')} (+{(data.date.iloc[-1]-data.date.iloc[0]).total_seconds()/3600:.1f} h)")
 
 
-def downsample_data(x_data, y_data):
+def downsample_data(x_data, y_data, number_of_points: int):
     # This is hacky
     x_is_time = False
     if pd.api.types.is_datetime64_any_dtype(x_data):
         x_is_time = True
         x_data = pd.to_datetime(x_data).astype(np.int64)
 
-    x_data, y_data = lttb.downsample(np.array([x_data, y_data]).T, n_out=1000, validators=[]).T
+    x_data, y_data = lttb.downsample(np.array([x_data, y_data]).T, n_out=number_of_points, validators=[]).T
 
     if x_is_time:
         x_data = pd.to_datetime(x_data, utc=True)
@@ -182,15 +182,16 @@ def plot_data(ax, data, x_axis, column_settings):
             print(f"  Integrated noise: {np.sqrt(np.mean(data[column]**2))}")
             data_to_plot = data[[x_axis, column]].dropna()
             # pop the "downsample" key because it cannot be passed to ax.plot
-            if settings.pop("downsample", True) and len(data_to_plot) > 1000:
-                x_data, y_data = downsample_data(*(data_to_plot[idx] for idx in data_to_plot))
+            number_of_points = 1000
+            if settings.pop("downsample", True) and len(data_to_plot) > number_of_points:
+                x_data, y_data = downsample_data(*(data_to_plot[idx] for idx in data_to_plot), number_of_points)
             else:
                 x_data, y_data = (data_to_plot[idx] for idx in data_to_plot)
             print(f"  Plotting {len(x_data)} values.")
             ax.plot(x_data, y_data, marker="", alpha=0.7, **settings)
 
 
-def plot_series(plot, show_plot_window):
+def plot_series(plot, show_plot_window: bool):
     print(f"Plotting {plot['description']}")
     # Load the data to be plotted
     plot_files = (plot_file for plot_file in plot["files"] if plot_file.get("show", True))
