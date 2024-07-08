@@ -11,7 +11,7 @@ plot = {
     "primary_axis": {
         "axis_settings": {
             "x_label": r"Frequency in \unit{\Hz}",
-            "y_label": r"Magnitude in \unit[per-mode = symbol]{\V \per \V}",
+            "y_label": r"Magnitude in \unit{\V \per \V}",
             "invert_x": False,
             "invert_y": False,
             "x_scale": "log",
