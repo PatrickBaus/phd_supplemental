@@ -76,6 +76,7 @@ sLim=0.682689492137086
 n_samples = int(1e8)
 print(f"Rolling the dice {n_samples:.0e} times.")
 
+np.random.seed(42)
 sampled_x = np.random.normal(mean_x, sigma_x, n_samples)
 result = f(sampled_x)
 result = result[result>0]
