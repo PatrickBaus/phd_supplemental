@@ -252,7 +252,7 @@ if __name__ == "__main__":
 
     phi = 0.75  # use 0.75 for the thesis
     scale = 0.4
-    noise_types = [(-2, "white", (-6.5, 6.5)), (-3, "flicker", (-15, 15)), (-4, "random_walk", (-200, 250))]
+    noise_types = [(-2, "white", (-6.5, 6.5)), (-3, "flicker", (-16, 16)), (-4, "random_walk", (-200, 250))]
     plot_types = ["amplitude", "psd", "adev"]
 
     for beta, name, y_limit in noise_types:
