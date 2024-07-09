@@ -15,7 +15,6 @@ plot = {
             "y_label": r"Output impedance in \unit{\ohm}",
             "invert_x": False,
             "invert_y": False,
-            "fixed_order": 6,
             "x_scale": "log",
             "y_scale": "log",
         },
