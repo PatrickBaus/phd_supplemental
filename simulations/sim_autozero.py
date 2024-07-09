@@ -150,9 +150,8 @@ def plot_noise(colored_noise, apply_az: bool, plot_types: list[str], show_plot_w
             -3: FS,
         }
         # downsample the data to logscale bins
-        # FIXME: Enable downsampling
-        #bins = np.logspace(np.floor(np.log10(np.min(freqs[1:]))), np.ceil(np.log10(np.max(freqs))), num=200)
-        #freqs, psd = bin_psd(freqs, psd, bins=bins)  # FIXME: Enable downsampling
+        bins = np.logspace(np.floor(np.log10(np.min(freqs[1:]))), np.ceil(np.log10(np.max(freqs))), num=200)
+        freqs, psd = bin_psd(freqs, psd, bins=bins)
 
         # compute amplitude PSD prefactor h_a
         has = {noise.b : noise.frequency_psd_from_qd(tau0) for noise in colored_noise}
