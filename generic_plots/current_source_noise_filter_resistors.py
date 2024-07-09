@@ -3,7 +3,7 @@ import seaborn as sns
 colors = sns.color_palette("colorblind")
 phi = (5**0.5 - 1) / 2  # golden ratio
 plot = {
-    "description": "Current Source noise (different R_filt)",
+    "description": "Current Source noise (different R_f)",
     "show": True,
     "output_file": {"fname": "../images/current_source_noise_filter_resistors.pgf"},
     "plot_size": (441.01773 / 72.27 * 0.89, 441.01773 / 72.27 * 0.89 * phi),
@@ -24,19 +24,19 @@ plot = {
         "plot_type": "absolute",  # absolute, relative, proportional
         "columns_to_plot": {
             "249ohm": {
-                "label": r"$R_{filt} = \qty{249}{\ohm}$",
+                "label": r"$R_{f} = \qty{249}{\ohm}$",
                 "color": colors[0],
             },
             "510ohm": {
-                "label": r"$R_{filt} = \qty{510}{\ohm}$",
+                "label": r"$R_{f} = \qty{510}{\ohm}$",
                 "color": colors[1],
             },
             "1000ohm": {
-                "label": r"$R_{filt} = \qty{1}{\kilo\ohm}$",
+                "label": r"$R_{f} = \qty{1}{\kilo\ohm}$",
                 "color": colors[2],
             },
             "1500ohm": {
-                "label": r"$R_{filt} = \qty{1.5}{\kilo\ohm}$",
+                "label": r"$R_{f} = \qty{1.5}{\kilo\ohm}$",
                 "color": colors[3],
             },
         },
