@@ -105,31 +105,6 @@ def crop_data(data, crop_index=None, crop=None):
         )
         data.drop(index_to_drop, inplace=True)
 
-    # y = 1/(0.000858614 + 0.000259555 * np.log(y) + 1.35034*10**-7 * np.log(y)**3)
-    # print(f"    Begin date: {data.date.iloc[0].tz_convert('Europe/Berlin')}")
-    # print(f"    End date:   {data.date.iloc[-1].tz_convert('Europe/Berlin')} (+{(data.date.iloc[-1]-data.date.iloc[0]).total_seconds()/3600:.1f} h)")
-
-
-def filter_savgol(window_length, polyorder):
-    def filter(data):
-        if len(data) <= window_length:
-            return None
-
-        return signal.savgol_filter(data, window_length, polyorder)
-
-    return filter
-
-
-def filter_butterworth(window_length=0.00005):
-    from scipy.signal import filtfilt, butter
-
-    b, a = butter(3, window_length)
-
-    def filter(data):
-        return filtfilt(b, a, data)
-
-    return filter
-
 
 def filter_rolling(window_length):
     def filter(data):
@@ -225,16 +200,12 @@ def plot_series(plot, show_plot_window):
         )
 
         ax1 = plt.subplot(111)
-        # plt.tick_params('x', labelbottom=False)
         prepare_axis(ax=ax1, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
 
         x_axis = plot_settings["x-axis"]
         integrate_data(data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
         plot_data(ax1, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
 
-        # plotShotNoise(ax1, 0.5)
-        # plotShotNoise(ax1, 0.1)
-        # plotShotNoise(ax1, 0.02)
 
         lines, labels = ax1.get_legend_handles_labels()
 
@@ -244,8 +215,6 @@ def plot_series(plot, show_plot_window):
             prepare_axis(ax=ax2, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
 
             plot_data(ax2, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
-
-            # ax2.set_ylabel(plot_settings["label"])
 
             lines2, labels2 = ax2.get_legend_handles_labels()
             lines += lines2
