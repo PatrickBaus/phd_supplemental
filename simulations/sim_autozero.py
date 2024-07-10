@@ -199,7 +199,6 @@ def plot_noise(colored_noise, apply_az: bool, plot_types: list[str], show_plot_w
         )
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])
-        # ax.set_title(r'Time Series')
         ax.set_xlabel(r"Time in $\unit{\second}$")
         ax.set_ylabel(r"Amplitude in $\unit{\V}$")
 
@@ -226,7 +225,6 @@ def plot_noise(colored_noise, apply_az: bool, plot_types: list[str], show_plot_w
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])
         ax.legend(loc="upper right")
-        # ax.set_title(r"Frequency Power Spectral Density")
         ax.set_xlabel(r"Frequency in $\unit{\Hz}$")
         ax.set_ylabel(r" $S_y(f)$ in $\unit{\V^2 \per \Hz}$")
 
@@ -253,7 +251,6 @@ def plot_noise(colored_noise, apply_az: bool, plot_types: list[str], show_plot_w
         ax.grid(True, which="minor", ls="-", color="0.85")
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])
-        # ax.set_title(r"Allan Deviation")
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$ in \unit{\V}")
 

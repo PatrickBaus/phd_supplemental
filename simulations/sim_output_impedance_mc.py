@@ -49,7 +49,6 @@ class FixedOrderFormatter(ScalarFormatter):
         mean_locs = np.mean(self.locs)
 
         if range / 2 < np.absolute(mean_locs):
-            ave_oom = np.floor(np.log10(mean_locs))
             p10 = 10 ** np.floor(np.log10(range))
             self.offset = (np.ceil(np.mean(self.locs) / p10) * p10)
         else:
@@ -94,8 +93,6 @@ print(f"Most likely result: {max_res:.2e} -{max_res-NormLo:.2e} +{NormHi-max_res
 ax1.vlines(NormLo, ymin=0, ymax=10**6, color=colors[1], label='1-sigma')
 ax1.vlines(NormHi, ymin=0, ymax=10**6, color=colors[1])
 
-# ax.set_yscale('log')
-# ax.set_xscale('log')
 plt.legend(loc="best")
 ax1.grid(True, which="minor", ls="-", color='0.85')
 ax1.grid(True, which="major", ls="-", color='0.45')

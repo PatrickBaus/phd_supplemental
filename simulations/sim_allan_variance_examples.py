@@ -178,7 +178,6 @@ def plot_noise(colored_noise: dict, betas, plot_types, show_plot_window: bool, p
         ax.set_ylim(plot_settings["ylim"])
         if label:
             ax.legend(loc="upper left")
-        # ax.set_title(r'Time Series')
         ax.set_xlabel(r"Time in $\unit{\second}$")
         ax.set_ylabel(r"Ampl. in arb. unit")
 
@@ -205,7 +204,6 @@ def plot_noise(colored_noise: dict, betas, plot_types, show_plot_window: bool, p
         ax.grid(True, which="major", ls="-", color="0.45")
         #ax.set_ylim(5e-2, 5e6)  # Set limits, so that all plots look the same
         ax.legend(loc="upper right")
-        # ax.set_title(r'Frequency Power Spectral Density')
         ax.set_xlabel(r"Frequency in $\unit{\Hz}$")
         ax.set_ylabel(r" $S_y(f)$ in $\unit{1 \per \Hz}$")
 
@@ -232,7 +230,6 @@ def plot_noise(colored_noise: dict, betas, plot_types, show_plot_window: bool, p
         ax.grid(True, which="minor", ls="-", color="0.85")
         ax.grid(True, which="major", ls="-", color="0.45")
         #ax.set_ylim(1e-2, 5e4)  # Set limits, so that all plots look the same
-        # ax.set_title(r'Allan Deviation')
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$")
 

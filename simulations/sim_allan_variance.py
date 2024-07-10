@@ -156,7 +156,6 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])  # Limits for random walk
         ax.legend(loc="upper left")
-        # ax.set_title(r'Time Series')
         ax.set_xlabel(r"Time in \unit{\second}")
         ax.set_ylabel(r"Ampl. in arb. unit")
 
@@ -174,8 +173,6 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
 
             print(f"  Plotting {len(freqs)} values.")
             (lines,) = ax.loglog(
-#                freqs,
-#                [ha * pow(freq, beta + 2) for freq in freqs],
                 [freq for freq in freqs if freq != 0 or beta >= -2],
                 [ha * pow(freq, beta + 2) for freq in freqs if freq != 0 or beta >= -2],
                 "--",
@@ -221,7 +218,6 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])  # Set limits, so that all plots look the same
         ax.set_xlim(None, 6e3)  # Set limits, so that all plots look the same, FIME: Check whether 5e3 is ok
-        # ax.set_title(r'Allan Deviation')
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$")
 
