@@ -168,7 +168,6 @@ def parse_fluke1524_file(filename, options, **kwargs):
         header=None,
         usecols=[1, 2, 3, 4, 5],
         names=["sensor_id", "temperature", "unit", "time", "date"],
-        parse_dates={"datetime": ["date", "time"]},
     )
 
     # Convert to SI units
@@ -182,8 +181,8 @@ def parse_fluke1524_file(filename, options, **kwargs):
         data = data.loc[data["sensor_id"] == options["sensor_id"]]  # Select only the sensors we want
         data.drop(columns="sensor_id", inplace=True)
 
-    # Rename datetime field
-    data.rename(columns={"datetime": "date"}, inplace=True)
+    # Parse date of format "2022-11-01 08:09:17.820169"
+    data["date"] = pd.to_datetime(data["date"] + ' ' + data.pop("time"), format="%Y-%m-%d %H:%M:%S.%f")
 
     data = data.reindex(columns=["date", "temperature"])
     # Data before 2018-03-15 18:00 was recorded with the wrong timezone
@@ -202,34 +201,34 @@ def parse_RSA306_file(filename, options):
     # String looks like this:
     # >>> print(repr(line))
     # 'Resolution Bandwidth,4,Hz\n'
-    regex_rbw = re.compile("^Resolution Bandwidth\,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\,([A-Za-z]+)\n$")
+    regex_rbw = re.compile(r"^Resolution Bandwidth\,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\,([A-Za-z]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'Trace 1\n'
-    regex_number_of_traces = re.compile("^Trace ([0-9]+)\n$")
+    regex_number_of_traces = re.compile(r"^Trace ([0-9]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'XStart,0,Hz\n'
-    regex_trace = re.compile("^Trace ([0-9]),,([A-Za-z]+),[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+\n$")
+    regex_trace = re.compile(r"^Trace ([0-9]),,([A-Za-z]+),[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'NumberPoints,64001\n'
-    regex_number_of_points = re.compile("^NumberPoints\,([0-9]+)\n$")
+    regex_number_of_points = re.compile(r"^NumberPoints\,([0-9]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'XStart,0,Hz\n'
-    regex_start = re.compile("^XStart,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
+    regex_start = re.compile(r"^XStart,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'XStop,1000000,Hz\n'
-    regex_end = re.compile("^XStop,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
+    regex_end = re.compile(r"^XStop,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # '-30.208715438842773\n'
     # OR in the latest version
     # '0.0025581971276551485,0.000\n'
     regex_value = re.compile(
-        "^([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)(?:\,[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)?\n$"
+        r"^([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)(?:\,[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)?\n$"
     )
     # String looks like this:
     # >>> print(repr(line))
@@ -237,7 +236,7 @@ def parse_RSA306_file(filename, options):
     # OR in the latest version
     # '0.0025581971276551485,0.000\n'
     regex_value = re.compile(
-        "^([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)(\,[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)?\n$"
+        r"^([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)(\,[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)?\n$"
     )
 
     selected_trace = options.get("trace", 1)
@@ -1012,7 +1011,7 @@ def parse_RTH1004_spectrum_file(filename, options):
     # String looks like this:
     # >>> print(repr(line))
     # 'Resolution Bandwidth,4,Hz\n'
-    regex_rbw = re.compile("^RBW \[([A-Za-z]+)\],([0-9]*)\n$")
+    regex_rbw = re.compile(r"^RBW \[([A-Za-z]+)\],([0-9]*)\n$")
 
     rbw = None
     with open(filename) as lines:
