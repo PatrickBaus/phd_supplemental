@@ -188,7 +188,12 @@ def plot_data(ax, data, x_axis, column_settings):
             else:
                 x_data, y_data = (data_to_plot[idx] for idx in data_to_plot)
             print(f"  Plotting {len(x_data)} values.")
-            ax.plot(x_data, y_data, marker="", alpha=0.7, **settings)
+            if "alpha" not in settings:
+                settings["alpha"] = 0.7
+            ax.plot(x_data, y_data, marker="", **settings)
+
+            if "fillstyle" in settings:
+                ax.fill_between(x_data, 0, y_data, alpha=.1, zorder=1)
 
 
 def plot_series(plot, show_plot_window: bool):
