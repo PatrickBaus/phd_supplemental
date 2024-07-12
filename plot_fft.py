@@ -21,7 +21,7 @@ __version__ = "0.9.0"
 tex_fonts = {
     "text.usetex": True,  # Use LaTeX to write all text
     "font.family": "serif",
-    # Use 10pt font in plots, to match 10pt font in document
+    # Use 10pt font in plots, to match 10pt font in thesis document
     "axes.labelsize": 10,
     "font.size": 10,
     # Make the legend/label fonts a little smaller
@@ -32,12 +32,14 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     # "pgf.texsystem": "lualatex",
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(os.path.realpath(__file__)),
