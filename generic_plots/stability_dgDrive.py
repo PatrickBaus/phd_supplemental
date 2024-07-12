@@ -25,6 +25,9 @@ plot = {
             "x_scale": "timedelta",
             "y_scale": "lin",
             # "limits_y": [-3e-6,3e-6],
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "date",
         "plot_type": "absolute",
@@ -45,7 +48,7 @@ plot = {
             # "fixed_order": -6,
             "x_scale": "lin",
             "y_scale": "lin",
-            "show_grid": False,
+            "grid_options": [{"visible": False}, ],
             # "limits_y": [22.4,23.4],
         },
         "x-axis": "date",

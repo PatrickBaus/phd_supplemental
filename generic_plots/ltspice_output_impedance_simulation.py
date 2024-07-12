@@ -15,6 +15,9 @@ plot = {
             "invert_y": False,
             "y_scale": "log",
             # "x_scale": "log",  # Turn this on to show, that R_out is a power law
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "vds",
         "plot_type": "absolute",  # absolute, relative, proportional

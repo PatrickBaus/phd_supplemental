@@ -25,6 +25,9 @@ plot = {
             "fixed_order": -3,
             "x_scale": "time",
             "y_scale": "lin",
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
             # "limits_y": [22.75, 23.25],
         },
         "x-axis": "date",
@@ -54,7 +57,7 @@ plot = {
             # "fixed_order": -6,
             "x_scale": "lin",
             "y_scale": "lin",
-            "show_grid": False,
+            "grid_options": [{"visible": False}, ],
             # "limits_y": [30.08,30.15],
         },
         "x-axis": "date",

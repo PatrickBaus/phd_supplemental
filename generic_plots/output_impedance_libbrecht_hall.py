@@ -17,6 +17,9 @@ plot = {
             "invert_y": False,
             "x_scale": "log",
             "y_scale": "log",
+            "grid_options": [
+                {"which": "minor", "axis": "y", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "frequency",
         "plot_type": "absolute",  # absolute, relative, proportional

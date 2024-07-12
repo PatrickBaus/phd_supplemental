@@ -42,7 +42,7 @@ plot = {
             "invert_y": False,
             "x_scale": "lin",
             "y_scale": "lin",
-            "show_grid": False,
+            "grid_options": [{"visible": False}, ],
         },
         "columns_to_plot": {
             "temperature_labnode": {

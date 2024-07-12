@@ -18,6 +18,9 @@ plot = {
             "invert_y": False,
             "fixed_order": None,
             "y_scale": "linear",
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "time",
         "plot_type": "absolute",  # absolute, relative, proportional

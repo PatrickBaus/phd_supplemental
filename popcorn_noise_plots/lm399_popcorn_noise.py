@@ -13,11 +13,10 @@ plot = {
     },  # popcorn noise comparison, used in PhD thesis
     "primary_axis": {
         "axis_settings": {
-            "show_grid": False,
             "fixed_order": -6,
             "x_scale": "time",
             "y_scale": "lin",
-            # "limits_y": [22.75, 23.25],
+            "grid_options": [{"visible": False}, ],
         },
         "x-axis": "date",
         "plot_type": "relative",  # absolute, relative, proportional

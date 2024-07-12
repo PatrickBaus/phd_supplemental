@@ -26,8 +26,10 @@ plot = {
             "invert_x": False,
             "invert_y": False,
             "fixed_order": -3,
-            # "y_scale": "lin",
             "x_scale": "time",
+            "grid_options": [
+                {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "date",
         "plot_type": "absolute",  # absolute, relative, proportional
@@ -41,13 +43,11 @@ plot = {
     "secondary_axis": {
         "show": True,
         "axis_settings": {
-            "show_grid": False,
             "y_label": r"Temperature in \unit{\celsius}",
             "invert_x": False,
             "invert_y": True,
-            # "fixed_order": 9,
-            # "y_scale": "lin",
             "x_scale": "lin",
+            "grid_options": [{"visible": False}, ],
         },
         "x-axis": "date",
         "plot_type": "absolute",  # absolute, relative, proportional
@@ -84,8 +84,10 @@ plot = {
             "invert_x": False,
             "invert_y": False,
             "fixed_order": -3,
-            # "y_scale": "lin",
             "x_scale": "lin",
+            "grid_options": [
+                {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
     },
     "files": [

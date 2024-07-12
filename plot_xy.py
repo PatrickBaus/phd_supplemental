@@ -165,11 +165,9 @@ def prepare_axis(ax, axis_settings, color_map=None):
     if axis_settings.get("invert_x"):
         ax.invert_xaxis()
 
-    if axis_settings.get("show_grid", True):
-        ax.grid(True, which="minor", ls="-", color="0.85")
-        ax.grid(True, which="major", ls="-", color="0.45")
-    # else:
-    #  ax.grid(False, which="both")
+    if axis_settings["grid_options"]:
+        for option in axis_settings["grid_options"]:
+            ax.grid(**option)
 
     ax.set_ylabel(axis_settings["y_label"])
     if axis_settings.get("x_label") is not None:

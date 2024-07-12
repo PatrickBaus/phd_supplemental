@@ -214,7 +214,7 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
             ax.loglog(drift_taus, drift_adev, 'o', color=lines.get_color(), markersize=3)
 
         ax.legend(loc="best")
-        ax.grid(True, which="minor", ls="-", color="0.85")
+        ax.grid(True, which="minor", axis="x", ls="-", color="0.85")
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])  # Set limits, so that all plots look the same
         ax.set_xlim(None, 6e3)  # Set limits, so that all plots look the same, FIME: Check whether 5e3 is ok
