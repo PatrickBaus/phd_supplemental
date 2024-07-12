@@ -217,7 +217,7 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
         ax.grid(True, which="minor", axis="x", ls="-", color="0.85")
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])  # Set limits, so that all plots look the same
-        ax.set_xlim(None, 6e3)  # Set limits, so that all plots look the same, FIME: Check whether 5e3 is ok
+        ax.set_xlim(None, None)  # FIXME: Set limits, so that all plots look the same. Check whether 5e3 is ok
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$")
 
