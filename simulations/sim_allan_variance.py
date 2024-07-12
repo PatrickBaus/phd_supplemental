@@ -121,9 +121,8 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
 
     if "adev" in plots_to_show:
         # compute ADEV
-        # FIXME: Change to totdev
         adevs = [at.oadev(noise.time_series, rate=FS, taus="decade")[:2] for noise in colored_noise]
-        drift_taus, drift_adev, *_ = at.oadev(drift_amplitude, data_type="freq", rate=FS, taus="decade")
+        drift_taus, drift_adev, *_ = at.oadev(drift_amplitude, data_type="freq", rate=FS, taus="decade")  # FIXME: Change to totdev
 
     fig, axs = plt.subplots(
         len(plots_to_show) if plot_direction != "horizontal" else 1,
