@@ -70,7 +70,7 @@ plot = {
             },
         },
         {
-            "filename": "fft_plots/current_source_noise/LNA_LTSpice.zip",
+            "filename": "fft_plots/current_source_noise/LNA_short_SR560_LTSpice.zip",
             "show": True,
             "parser": "ltspice_fets",
             "options": {
@@ -78,7 +78,7 @@ plot = {
                 "columns": {0: "freq", 1: "lna_background_simulation"},
                 "scaling": {
                     # The gain is already included in the data
-                    "lna_background_simulation": lambda data : data["lna_background_simulation"][(10 <= data["freq"]) & (data["freq"] <= 1e6)],
+                    "lna_background_simulation": lambda data : data["lna_background_simulation"][(10 <= data["freq"]) & (data["freq"] <= 1e6)] / 10000.867,
                 },
             },
         },
