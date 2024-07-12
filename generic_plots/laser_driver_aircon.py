@@ -21,9 +21,7 @@ plot = {
             "fixed_order": -6,
             "x_scale": "time",
             "date_format": "%H:%M",
-            "grid_options": [
-                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
-            ]
+            "grid_options": [{"which": "major", "ls": "-", "color": "0.45"}, ],
         },
         "x-axis": "date",
         "plot_type": "absolute",  # absolute, relative, proportional
@@ -40,7 +38,7 @@ plot = {
             "y_label": r"Temperature in \unit{\celsius}",
             "invert_y": False,
             "fixed_order": None,
-            "grid_options": [{"visible": False}, ]
+            "grid_options": [{"which": "major", "ls": "-", "color": "0.45"}, ],
         },
         "x-axis": "date",
         "columns_to_plot": {

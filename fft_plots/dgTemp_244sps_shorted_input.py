@@ -21,7 +21,7 @@ plot = {
             "x_scale": "log",
             "y_scale": "log",
             "grid_options": [
-                {"which": "minor", "axis": "y", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
             ]
         },
         "x-axis": "freq",
