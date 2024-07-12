@@ -53,8 +53,8 @@ def bin_psd(x_data, y_data, bins):
 
     for i in range(len(bins)-1):
         # Return NaN for empty bins
-        x_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
-        y_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
+        x_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
+        y_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
 
     return x_binned[~np.isnan(x_binned)], y_binned[~np.isnan(y_binned)]
 
