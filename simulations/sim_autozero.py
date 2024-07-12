@@ -226,7 +226,7 @@ def plot_noise(colored_noise, apply_az: bool, plot_types: list[str], show_plot_w
         ax.set_ylim(plot_settings["ylim"])
         ax.legend(loc="upper right")
         ax.set_xlabel(r"Frequency in $\unit{\Hz}$")
-        ax.set_ylabel(r" $S_y(f)$ in $\unit{\V^2 \per \Hz}$")
+        ax.set_ylabel(r"$S_y(f)$ in $\displaystyle \unit{\V^2 \per \Hz}$")
 
     # ADEV plot
     if "adev" in plot_types:

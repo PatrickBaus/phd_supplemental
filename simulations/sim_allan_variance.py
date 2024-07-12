@@ -187,7 +187,7 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
         ax.legend(loc="upper right")
         # ax.set_title(r'Frequency Power Spectral Density')
         ax.set_xlabel(r"Frequency in $\unit{\Hz}$")
-        ax.set_ylabel(r" $S_y(f)$ in $\unit{1 \per \Hz}$")
+        ax.set_ylabel(r"$S_y(f)$ in $\unit{1 \per \Hz}$")
 
     # ADEV plot
     if "adev" in plots_to_show:

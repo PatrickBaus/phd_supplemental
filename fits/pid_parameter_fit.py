@@ -15,14 +15,15 @@ plot = {
     "primary_axis": {
         "axis_settings": {
             "x_label": r"Time in \unit{\s}",
-            "y_label": r"DAC outpt in \unit{\bit}",
+            "y_label": r"DAC output in \unit{\bit}",
             "invert_x": False,
             "invert_y": False,
             "x_scale": "lin",
             "y_scale": "lin",
+            "grid_options": [{"which": "major", "ls": "-", "color": "0.45"}, ]
         },
         "x-axis": "date",
-        "label": r"DAC outpt in \unit{\bit}",
+        "label": r"DAC output",
         "axis_fixed_order": 0,
         "columns_to_plot": {
             "output": {

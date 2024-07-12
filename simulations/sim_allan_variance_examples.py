@@ -205,7 +205,7 @@ def plot_noise(colored_noise: dict, betas, plot_types, show_plot_window: bool, p
         #ax.set_ylim(5e-2, 5e6)  # Set limits, so that all plots look the same
         ax.legend(loc="upper right")
         ax.set_xlabel(r"Frequency in $\unit{\Hz}$")
-        ax.set_ylabel(r" $S_y(f)$ in $\unit{1 \per \Hz}$")
+        ax.set_ylabel(r"$S_y(f)$ in $\unit{1 \per \Hz}$")
 
     # ADEV plot
     if "adev" in plots_to_show:
