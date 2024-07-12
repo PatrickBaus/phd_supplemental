@@ -40,11 +40,6 @@ plot = {
                 "color": colors[1],
                 "linewidth": 1.5,  # FIXME: replace with 1.0
             },
-            "lna_10R_background_simulation": {
-                "label": None,
-                "color": colors[1],
-                "linewidth": 1.5,  # FIXME: replace with 1.0
-            },
         },
     },
     "files": [
@@ -99,12 +94,6 @@ plot = {
                     #  the gain at 9716.7159.
                     "lna_10R_background_simulation": lambda data : data["lna_10R_background_simulation"][(10 <= data["freq"]) & (data["freq"] <= 1e6)] / 9800,
                 },
-            },
-        },
-            "options": {
-                "delimiter": "\t",
-                "columns": {0: "freq", 1: "lna_10R_background_simulation"},
-                "scaling": {},
             },
         },
     ],
