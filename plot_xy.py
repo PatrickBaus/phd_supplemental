@@ -290,8 +290,6 @@ def plot_series(plot, show_plot_window):
                 ax.annotate(
                     plot_settings["annotation"]["label"].format(slope=fit["slope"], uncertainty=fit["uncertainty"]),
                     plot_settings["annotation"]["xy"],
-                    # f"Tempco: ({fit['slope']:.3e} ± {fit['uncertainty']:.2e}) \\unit[per-mode=symbol]{{\\ohm \\per \\kelvin}}",
-                    # xy=(0.9,0.1),
                     xycoords="axes fraction",
                     xytext=(-5, 0),
                     textcoords="offset points",

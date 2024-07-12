@@ -64,7 +64,7 @@ plot = {
         "x-axis": "temperature",
         "y-axis": "value_ext",
         "annotation": {
-            "label": r"({slope:.3e} ± {uncertainty:.1e}) \unit[per-mode=symbol]{{\ohm \per \kelvin}}",
+            "label": r"({slope:.3e} ± {uncertainty:.1e}) \unit{{\ohm \per \kelvin}}",
             "xy": (0.7, 0.2),
         },
         "columns_to_plot": {
