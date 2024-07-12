@@ -160,6 +160,7 @@ def prepare_axis(ax, axis_settings, color_map=None):
         ax.set_xscale("log")
     if axis_settings.get("x_scale") == "time":
         ax.xaxis.set_major_locator(matplotlib.dates.AutoDateLocator())
+        # ax.xaxis.set_major_locator(matplotlib.dates.AutoDateLocator(maxticks=6))
         # ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%m-%d %H:%M"))
         ax.xaxis.set_major_formatter(matplotlib.dates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
     if axis_settings.get("invert_y"):

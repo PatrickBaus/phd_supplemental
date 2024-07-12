@@ -63,7 +63,7 @@ plot = {
         "x-axis": "air_pressure",
         "y-axis": "piezo_voltage",
         "annotation": {
-            "label": r"({slope:.3e} ± {uncertainty:.0e}) \unit{{\V \per \hecto\pascal}}",
+            "label": r"({slope:.3e} ± {uncertainty:.0e}) $\textstyle \unit{{\V \per \hecto\pascal}}$",
             "xy": (0.55, 0.1),
         },
         "columns_to_plot": {

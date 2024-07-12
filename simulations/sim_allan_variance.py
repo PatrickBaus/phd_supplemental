@@ -178,7 +178,7 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
                 [freq for freq in freqs if freq != 0 or beta >= -2],
                 [ha * pow(freq, beta + 2) for freq in freqs if freq != 0 or beta >= -2],
                 "--",
-                label=f"$h_{{{beta+2}}}f^{{{beta+2}}}$",
+                label=rf"$\displaystyle h_{{{beta+2}}}f^{{{beta+2}}}$",
                 color=beta_colors[beta],
             )
             ax.loglog(freqs, psd, ".", color=lines.get_color(), markersize=2)
@@ -205,14 +205,14 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
                 taus,
                 [noise.adev_from_qd(tau0, tau) * tau ** ((-3 - noise.b) / 2) for tau in taus],
                 "--",
-                label=f"$\\propto\\sqrt{{h_{{{noise.b+2}}}}}\\tau^{{{(-3-noise.b)/2:+}}}$",
+                label=rf"$\displaystyle \propto\sqrt{{h_{{{noise.b+2}}}}}\tau^{{{(-3-noise.b)/2:+}}}$",
                 color=beta_colors[noise.b],
             )
             ax.loglog(taus, adev, "o", color=lines.get_color(), markersize=3)
 
         if -5 in betas:
             print(f"  Plotting {len(drift_taus)} values.")
-            lines, = ax.loglog(drift_taus, [0.5**0.5 * D * (tau/tau0) for tau in drift_taus], '--', label=r'$\propto D\tau^{+1}$', color=beta_colors[-5])
+            lines, = ax.loglog(drift_taus, [0.5**0.5 * D * (tau/tau0) for tau in drift_taus], '--', label=r'$\displaystyle \propto D\tau^{+1}$', color=beta_colors[-5])
             ax.loglog(drift_taus, drift_adev, 'o', color=lines.get_color(), markersize=3)
 
         ax.legend(loc="best")

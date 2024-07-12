@@ -224,7 +224,7 @@ def plot_noise(colored_noise: dict, betas, plot_types, show_plot_window: bool, p
                 adev_taus[beta],
                 [colored_noise[beta].adev_from_qd(tau0, tau) * tau ** ((-3 - beta) / 2) for tau in adev_taus[beta]],
                 "--",
-                label=f"{labels[beta]} $\\propto \\sqrt{{h_{{{beta+2}}}}}\\tau^{{{(-3-beta)/2:+}}}$",
+                label=rf"{labels[beta]} $\displaystyle \propto \sqrt{{h_{{{beta+2}}}}}\tau^{{{(-3-beta)/2:+}}}$",
                 color=beta_colors[beta],
             )
 

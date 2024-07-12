@@ -104,6 +104,9 @@ def process_data(data, columns, plot_type):
             (tau, adev, adev_error, n) = allantools.totdev(
                 data[column].values, data_type="freq", rate=sample_rate
             )  # , taus="all")
+            #(tau, adev, adev_error, n) = allantools.oadev(
+            #    data[column].values, data_type="freq", rate=sample_rate, taus="all"
+            #)
             df["tau"] = tau
             df[column] = adev
             df[column + "_error"] = adev_error

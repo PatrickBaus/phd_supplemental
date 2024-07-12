@@ -21,13 +21,20 @@ __version__ = "0.9.0"
 tex_fonts = {
     "text.usetex": True,  # Use LaTeX to write all text
     "font.family": "serif",
+    #"font.family": "sans-serif",
     # Use 10pt font in plots, to match 10pt font in thesis document
+    # Use 9pt font in plots, to match 9pt font in presentation
     "axes.labelsize": 10,
+    #"axes.labelsize": 9,
     "font.size": 10,
+    #"font.size": 9,
     # Make the legend/label fonts a little smaller
     "legend.fontsize": 8,
+    #"legend.fontsize": 5,
     "xtick.labelsize": 8,
+    #"xtick.labelsize": 7,
     "ytick.labelsize": 8,
+    #"ytick.labelsize": 7,
     "pgf.rcfonts": False,  # don't setup fonts from rc parameters
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
@@ -206,7 +213,6 @@ def plot_series(plot, show_plot_window):
         integrate_data(data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
         plot_data(ax1, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
 
-
         lines, labels = ax1.get_legend_handles_labels()
 
         plot_settings = plot.get("secondary_axis", {})
@@ -230,6 +236,7 @@ def plot_series(plot, show_plot_window):
         plt.suptitle(plot["title"], fontsize=16)
 
     plt.tight_layout()
+#    plt.tight_layout(pad=0.1)  # Disable padding. This is done by latex. We need a bit of padding for special character.
     if plot.get("title") is not None:
         plt.subplots_adjust(top=0.88)
     if plot.get("output_file"):

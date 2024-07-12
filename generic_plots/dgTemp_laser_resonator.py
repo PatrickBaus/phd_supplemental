@@ -55,7 +55,7 @@ plot = {
                 "color": colors[0],
             },
             "setpoint": {
-                "label": r"Setpoint \qty{21.6893}{\celsius}",
+                "label": r"Setpoint $\textstyle \qty{21.6893}{\celsius}$",
                 "color": colors[1],
                 "linestyle": "dashed",
             },

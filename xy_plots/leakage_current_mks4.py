@@ -64,7 +64,7 @@ plot = {
         "x-axis": "temperature",
         "y-axis": "value",
         "annotation": {
-            "label": r"({slope:.3e} ± {uncertainty:.1e}) \unit{{\A \per \kelvin}}",
+            "label": r"({slope:.3e} ± {uncertainty:.1e}) $\textstyle \unit{{\A \per \kelvin}}$",
             "xy": (0.675, 0.4),
         },
         "columns_to_plot": {
