@@ -31,11 +31,13 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(__file__),
@@ -51,8 +53,8 @@ def bin_psd(x_data, y_data, bins):
 
     for i in range(len(bins)-1):
         # Return NaN for empty bins
-        x_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
-        y_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
+        x_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
+        y_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
 
     return x_binned[~np.isnan(x_binned)], y_binned[~np.isnan(y_binned)]
 
@@ -103,7 +105,7 @@ def generate_noise(dead_time: int, nplcs: NDArray[int]):
             f"Generating {labels[noise.b].lower()} -> Q_d: {noise.qd} beta: {noise.b} tau0: {tau0} h_alpha: {noise.frequency_psd_from_qd(tau0)}")
         noise.generateNoise()
 
-    # phase2frequency() conversion "eats" 1 value, because is differentiates the phase input
+    # phase2frequency() conversion "eats" 1 value, because it differentiates the phase input
     # So we will drop 1 more to get an even of sample length
     amplitudes = [at.phase2frequency(noise.time_series, FS)[:-1] for noise in colored_noise]
     amplitude = np.sum(amplitudes, 0)
@@ -112,7 +114,6 @@ def generate_noise(dead_time: int, nplcs: NDArray[int]):
 
     amplitudes_az = {}
     for nplc in nplcs:
-        # print(f"Variance for NPLC {nplc}, no AZ: {np.var(np.average(amplitude.reshape(-1, nplc), axis=1))}")
         # Apply AZ
         # Add dead time by removing every nplc+1 value
         if dead_time > 0:
@@ -123,12 +124,9 @@ def generate_noise(dead_time: int, nplcs: NDArray[int]):
             amplitude_az = amplitude
         # integrate the measurement
         amplitude_az = np.average(amplitude_az.reshape(-1, nplc), axis=1)
-        # Subtract every second measurement
+        # Subtract every other measurement
         amplitude_az = amplitude_az[0::2] - amplitude_az[1::2]
         amplitudes_az[nplc] = amplitude_az
-        # var_az = np.var(amplitude_az)
-        # print(f"Variance for NPLC {nplc}, AZ: {var_az}")
-        # print(f"Variance for NPLC {nplc}, AZ, normalized: {1/np.sqrt(amplitude_az.size) * var_az}")
 
     return amplitude, amplitudes_az
 
@@ -155,7 +153,6 @@ def plot_noise(amplitude, amplitudes_az: dict[int], dead_time:int, show_plot_win
     ax.grid(True, which="minor", ls="-", color="0.85")
     ax.grid(True, which="major", ls="-", color="0.45")
     ax.set_ylim(1e-8, 2e-6)  # Set limits, so that all plots look the same
-    # ax.set_title(r'Allan Deviation')
     ax.set_xlabel(r"$\tau$ in \unit{\second}")
     ax.set_ylabel(r"ADEV $\sigma_A(\tau)$ in \unit{\V}")
 

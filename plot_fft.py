@@ -21,23 +21,32 @@ __version__ = "0.9.0"
 tex_fonts = {
     "text.usetex": True,  # Use LaTeX to write all text
     "font.family": "serif",
-    # Use 10pt font in plots, to match 10pt font in document
+    #"font.family": "sans-serif",
+    # Use 10pt font in plots, to match 10pt font in thesis document
+    # Use 9pt font in plots, to match 9pt font in presentation
     "axes.labelsize": 10,
+    #"axes.labelsize": 9,
     "font.size": 10,
+    #"font.size": 9,
     # Make the legend/label fonts a little smaller
     "legend.fontsize": 8,
+    #"legend.fontsize": 5,
     "xtick.labelsize": 8,
+    #"xtick.labelsize": 7,
     "ytick.labelsize": 8,
+    #"ytick.labelsize": 7,
     "pgf.rcfonts": False,  # don't setup fonts from rc parameters
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     # "pgf.texsystem": "lualatex",
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(os.path.realpath(__file__)),
@@ -105,31 +114,6 @@ def crop_data(data, crop_index=None, crop=None):
         )
         data.drop(index_to_drop, inplace=True)
 
-    # y = 1/(0.000858614 + 0.000259555 * np.log(y) + 1.35034*10**-7 * np.log(y)**3)
-    # print(f"    Begin date: {data.date.iloc[0].tz_convert('Europe/Berlin')}")
-    # print(f"    End date:   {data.date.iloc[-1].tz_convert('Europe/Berlin')} (+{(data.date.iloc[-1]-data.date.iloc[0]).total_seconds()/3600:.1f} h)")
-
-
-def filter_savgol(window_length, polyorder):
-    def filter(data):
-        if len(data) <= window_length:
-            return None
-
-        return signal.savgol_filter(data, window_length, polyorder)
-
-    return filter
-
-
-def filter_butterworth(window_length=0.00005):
-    from scipy.signal import filtfilt, butter
-
-    b, a = butter(3, window_length)
-
-    def filter(data):
-        return filtfilt(b, a, data)
-
-    return filter
-
 
 def filter_rolling(window_length):
     def filter(data):
@@ -163,11 +147,9 @@ def prepare_axis(ax, axis_settings, color_map=None):
     if axis_settings.get("invert_x"):
         ax.invert_xaxis()
 
-    if axis_settings.get("show_grid", True):
-        ax.grid(True, which="minor", ls="-", color="0.85")
-        ax.grid(True, which="major", ls="-", color="0.45")
-    else:
-        ax.grid(False, which="both")
+    if axis_settings["grid_options"]:
+        for option in axis_settings["grid_options"]:
+            ax.grid(**option)
 
     ax.set_ylabel(axis_settings["y_label"])
     if axis_settings.get("x_label") is not None:
@@ -225,16 +207,11 @@ def plot_series(plot, show_plot_window):
         )
 
         ax1 = plt.subplot(111)
-        # plt.tick_params('x', labelbottom=False)
         prepare_axis(ax=ax1, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
 
         x_axis = plot_settings["x-axis"]
         integrate_data(data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
         plot_data(ax1, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
-
-        # plotShotNoise(ax1, 0.5)
-        # plotShotNoise(ax1, 0.1)
-        # plotShotNoise(ax1, 0.02)
 
         lines, labels = ax1.get_legend_handles_labels()
 
@@ -244,8 +221,6 @@ def plot_series(plot, show_plot_window):
             prepare_axis(ax=ax2, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
 
             plot_data(ax2, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
-
-            # ax2.set_ylabel(plot_settings["label"])
 
             lines2, labels2 = ax2.get_legend_handles_labels()
             lines += lines2
@@ -261,6 +236,7 @@ def plot_series(plot, show_plot_window):
         plt.suptitle(plot["title"], fontsize=16)
 
     plt.tight_layout()
+#    plt.tight_layout(pad=0.1)  # Disable padding. This is done by latex. We need a bit of padding for special character.
     if plot.get("title") is not None:
         plt.subplots_adjust(top=0.88)
     if plot.get("output_file"):

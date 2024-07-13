@@ -16,6 +16,9 @@ plot = {
             "invert_y": True,
             "fixed_order": -3,
             "y_scale": "linear",
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "vds",
         "plot_type": "absolute",  # absolute, relative, proportional

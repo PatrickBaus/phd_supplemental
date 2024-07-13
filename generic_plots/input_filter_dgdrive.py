@@ -14,9 +14,11 @@ plot = {
             "y_label": r"Magnitude in \unit{\V \per \V}",
             "invert_x": False,
             "invert_y": False,
-            "fixed_order": -3,
             "x_scale": "log",
             "y_scale": "log",
+            "grid_options": [
+                {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "freq",
         "plot_type": "absolute",
@@ -41,7 +43,7 @@ plot = {
             # "fixed_order": -6,
             "x_scale": "log",
             "y_scale": "lin",
-            "show_grid": False,
+            "grid_options": [{"visible": False}, ],
             # "limits_y": [22.4,23.4],
         },
         "x-axis": "freq",

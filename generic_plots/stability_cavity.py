@@ -20,6 +20,9 @@ plot = {
             # "fixed_order": -6,
             "x_scale": "time",
             "y_scale": "lin",
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "date",
         "plot_type": "absolute",

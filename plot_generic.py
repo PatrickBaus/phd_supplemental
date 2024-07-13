@@ -33,12 +33,14 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     # "pgf.texsystem": "lualatex",
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(os.path.realpath(__file__)),
@@ -111,14 +113,14 @@ def crop_data(data, crop_index="date", crop=None):
     #    print(f"    End date:   {data.date.iloc[-1].tz_convert('Europe/Berlin')} (+{(data.date.iloc[-1]-data.date.iloc[0]).total_seconds()/3600:.1f} h)")
 
 
-def downsample_data(x_data, y_data):
+def downsample_data(x_data, y_data, number_of_points: int):
     # This is hacky
     x_is_time = False
     if pd.api.types.is_datetime64_any_dtype(x_data):
         x_is_time = True
         x_data = pd.to_datetime(x_data).astype(np.int64)
 
-    x_data, y_data = lttb.downsample(np.array([x_data, y_data]).T, n_out=1000, validators=[]).T
+    x_data, y_data = lttb.downsample(np.array([x_data, y_data]).T, n_out=number_of_points, validators=[]).T
 
     if x_is_time:
         x_data = pd.to_datetime(x_data, utc=True)
@@ -164,11 +166,9 @@ def prepare_axis(ax, axis_settings):
     if axis_settings.get("limits_y"):
         ax.set_ylim(*axis_settings.get("limits_y"))
 
-    if axis_settings.get("show_grid", True):
-        ax.grid(True, which="minor", ls="-", color="0.85")
-        ax.grid(True, which="major", ls="-", color="0.45")
-    else:
-        ax.grid(False, which="both")
+    if axis_settings["grid_options"]:
+        for option in axis_settings["grid_options"]:
+            ax.grid(**option)
 
     ax.set_ylabel(axis_settings["y_label"])
     if axis_settings.get("x_label") is not None:
@@ -176,19 +176,27 @@ def prepare_axis(ax, axis_settings):
 
 
 def plot_data(ax, data, x_axis, column_settings):
+    settings: dict
     for column, settings in column_settings.items():
         if column in data:
             print(f"  Integrated noise: {np.sqrt(np.mean(data[column]**2))}")
             data_to_plot = data[[x_axis, column]].dropna()
-            if len(data_to_plot) > 1000:
-                x_data, y_data = downsample_data(*(data_to_plot[idx] for idx in data_to_plot))
+            # pop the "downsample" key because it cannot be passed to ax.plot
+            number_of_points = 1000
+            if settings.pop("downsample", True) and len(data_to_plot) > number_of_points:
+                x_data, y_data = downsample_data(*(data_to_plot[idx] for idx in data_to_plot), number_of_points)
             else:
                 x_data, y_data = (data_to_plot[idx] for idx in data_to_plot)
             print(f"  Plotting {len(x_data)} values.")
-            ax.plot(x_data, y_data, marker="", alpha=0.7, **settings)
+            if "alpha" not in settings:
+                settings["alpha"] = 0.7
+            ax.plot(x_data, y_data, marker="", **settings)
+
+            if "fillstyle" in settings:
+                ax.fill_between(x_data, 0, y_data, alpha=.1, zorder=1)
 
 
-def plot_series(plot, show_plot_window):
+def plot_series(plot, show_plot_window: bool):
     print(f"Plotting {plot['description']}")
     # Load the data to be plotted
     plot_files = (plot_file for plot_file in plot["files"] if plot_file.get("show", True))

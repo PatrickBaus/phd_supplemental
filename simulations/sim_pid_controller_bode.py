@@ -26,10 +26,12 @@ tex_fonts = {
     "pgf.rcfonts": False,     # don't setup fonts from rc parameters
     "text.latex.preamble": "\n".join([ # plots will use this preamble
         r"\usepackage{siunitx}",
+        r"\sisetup{per-mode = symbol}%"
     ]),
     #"pgf.texsystem": "lualatex",
     "pgf.preamble": "\n".join([ # plots will use this preamble
         r"\usepackage{siunitx}",
+        r"\sisetup{per-mode = symbol}%"
     ]),
     "savefig.directory": os.path.dirname(os.path.realpath(__file__)),
 }
@@ -74,7 +76,7 @@ plt.plot(
     abs(transfer_function(1j*t, params)),
     linewidth=1,
     alpha=0.7,
-    label=f"PID, $K_p={params.kp}$, $K_i=\qty{{{params.ki}}}{{\per \s}}$, $K_d=\qty{{{params.kd}}}{{\s}}$",
+    label=rf"PID, $K_p={params.kp}$, $K_i=\qty{{{params.ki}}}{{\per \s}}$, $K_d=\qty{{{params.kd}}}{{\s}}$",
     color=colors[0],
 )
 
@@ -83,7 +85,7 @@ plt.plot(
     abs(transfer_function(1j*t, params, alpha=0.1)),
     linewidth=1,
     alpha=0.7,
-    label=f"PID+filter,$K_p={params.kp}$, $K_i=\qty{{{params.ki}}}{{\per \s}}$, $K_d=\qty{{{params.kd}}}{{\s}}$, $\\alpha=\\num{0.1}$",
+    label=rf"PID+filter,$K_p={params.kp}$, $K_i=\qty{{{params.ki}}}{{\per \s}}$, $K_d=\qty{{{params.kd}}}{{\s}}$, $\alpha=\num{0.1}$",
     color=colors[1],
 )
 

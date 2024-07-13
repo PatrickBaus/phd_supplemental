@@ -15,9 +15,11 @@ plot = {
             "y_label": r"Output impedance in \unit{\ohm}",
             "invert_x": False,
             "invert_y": False,
-            "fixed_order": 6,
             "x_scale": "log",
             "y_scale": "log",
+            "grid_options": [
+                {"which": "minor", "axis": "y", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "frequency",
         "plot_type": "absolute",  # absolute, relative, proportional

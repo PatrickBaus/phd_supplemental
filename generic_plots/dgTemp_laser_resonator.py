@@ -42,6 +42,9 @@ plot = {
             "fixed_order": -3,
             "x_scale": "time",
             "y_scale": "lin",
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
             # "limits_y": [22.75, 23.25],
         },
         "x-axis": "date",
@@ -52,7 +55,7 @@ plot = {
                 "color": colors[0],
             },
             "setpoint": {
-                "label": r"Setpoint \qty{21.6893}{\celsius}",
+                "label": r"Setpoint $\textstyle \qty{21.6893}{\celsius}$",
                 "color": colors[1],
                 "linestyle": "dashed",
             },

@@ -21,9 +21,11 @@ plot = {
             "y_label": r"Noise density in \unit[power-half-as-sqrt,per-mode=symbol]{\A \Hz\tothe{-0.5}}",
             "invert_x": False,
             "invert_y": False,
-            # "fixed_order": -9,
             "x_scale": "log",
             "y_scale": "log",
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "freq",
         "plot_type": "absolute",  # absolute, relative, proportional

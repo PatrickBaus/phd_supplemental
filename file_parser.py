@@ -4,6 +4,9 @@ import datetime
 import io
 import os
 import re
+
+import lmfit as lmfit
+from scipy import signal
 from itertools import islice
 
 import dateutil
@@ -57,7 +60,7 @@ def parse_Keysight34470A_file(filename, options, **kwargs):
     )
 
     data["date"] = pd.to_datetime(data["date"] * sample_interval + start_date_ts, unit="s")
-    data = data[abs(data[options.get("value_name", "value")]) < 9.90000000e37]  # Drop out out bounds
+    data = data[abs(data[options.get("value_name", "value")]) < 9.90000000e37]  # Drop out of bounds
     data["date"] = data["date"].dt.tz_localize("utc")
 
     for key, scaling_function in options.get("scaling", {}).items():
@@ -168,7 +171,6 @@ def parse_fluke1524_file(filename, options, **kwargs):
         header=None,
         usecols=[1, 2, 3, 4, 5],
         names=["sensor_id", "temperature", "unit", "time", "date"],
-        parse_dates={"datetime": ["date", "time"]},
     )
 
     # Convert to SI units
@@ -182,8 +184,8 @@ def parse_fluke1524_file(filename, options, **kwargs):
         data = data.loc[data["sensor_id"] == options["sensor_id"]]  # Select only the sensors we want
         data.drop(columns="sensor_id", inplace=True)
 
-    # Rename datetime field
-    data.rename(columns={"datetime": "date"}, inplace=True)
+    # Parse date of format "2022-11-01 08:09:17.820169"
+    data["date"] = pd.to_datetime(data["date"] + ' ' + data.pop("time"), format="%Y-%m-%d %H:%M:%S.%f")
 
     data = data.reindex(columns=["date", "temperature"])
     # Data before 2018-03-15 18:00 was recorded with the wrong timezone
@@ -202,34 +204,34 @@ def parse_RSA306_file(filename, options):
     # String looks like this:
     # >>> print(repr(line))
     # 'Resolution Bandwidth,4,Hz\n'
-    regex_rbw = re.compile("^Resolution Bandwidth\,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\,([A-Za-z]+)\n$")
+    regex_rbw = re.compile(r"^Resolution Bandwidth\,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)\,([A-Za-z]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'Trace 1\n'
-    regex_number_of_traces = re.compile("^Trace ([0-9]+)\n$")
+    regex_number_of_traces = re.compile(r"^Trace ([0-9]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'XStart,0,Hz\n'
-    regex_trace = re.compile("^Trace ([0-9]),,([A-Za-z]+),[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+\n$")
+    regex_trace = re.compile(r"^Trace ([0-9]),,([A-Za-z]+),[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'NumberPoints,64001\n'
-    regex_number_of_points = re.compile("^NumberPoints\,([0-9]+)\n$")
+    regex_number_of_points = re.compile(r"^NumberPoints\,([0-9]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'XStart,0,Hz\n'
-    regex_start = re.compile("^XStart,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
+    regex_start = re.compile(r"^XStart,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # 'XStop,1000000,Hz\n'
-    regex_end = re.compile("^XStop,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
+    regex_end = re.compile(r"^XStop,([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?),([A-Za-z]+)\n$")
     # String looks like this:
     # >>> print(repr(line))
     # '-30.208715438842773\n'
     # OR in the latest version
     # '0.0025581971276551485,0.000\n'
     regex_value = re.compile(
-        "^([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)(?:\,[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)?\n$"
+        r"^([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)(?:\,[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)?\n$"
     )
     # String looks like this:
     # >>> print(repr(line))
@@ -237,7 +239,7 @@ def parse_RSA306_file(filename, options):
     # OR in the latest version
     # '0.0025581971276551485,0.000\n'
     regex_value = re.compile(
-        "^([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)(\,[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)?\n$"
+        r"^([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)(\,[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?)?\n$"
     )
 
     selected_trace = options.get("trace", 1)
@@ -1012,7 +1014,7 @@ def parse_RTH1004_spectrum_file(filename, options):
     # String looks like this:
     # >>> print(repr(line))
     # 'Resolution Bandwidth,4,Hz\n'
-    regex_rbw = re.compile("^RBW \[([A-Za-z]+)\],([0-9]*)\n$")
+    regex_rbw = re.compile(r"^RBW \[([A-Za-z]+)\],([0-9]*)\n$")
 
     rbw = None
     with open(filename) as lines:
@@ -1509,6 +1511,68 @@ def parse_bode100_file(filename, options, **kwargs):
     return data, 0
 
 
+# taken from: https://gist.github.com/endolith/255291
+def freq_from_fft(sig, fs):
+    """
+    Estimate frequency from peak of FFT
+    """
+    # Compute Fourier transform of windowed signal
+    windowed = sig * signal.windows.blackmanharris(len(sig))
+    f = np.fft.rfft(windowed)
+    f[0:2]=0
+
+    # Find the peak and interpolate to get a more accurate peak
+    i = np.argmax(abs(f))  # Just use this for less-accurate, naive version
+    #true_i = parabolic(log(abs(f)), i)[0]
+
+    # Convert to equivalent frequency
+    return fs * i / len(windowed)
+
+
+def parse_output_impedance_generic(filename, options, **kwargs):
+    data = pd.read_csv(
+        filename,
+        comment="#",
+        header=None,
+        skiprows=options.get("skiprows", 1),
+        delimiter=options.get("delimiter", ","),
+        usecols=options["columns"].keys(),
+        names=options["columns"].values(),
+    )
+
+    for key, scaling_function in options.get("scaling", {}).items():
+        data[key] = scaling_function(data)
+
+    sample_interval = (data[options["x-axis"]].iloc[-1] - data[options["x-axis"]].iloc[0]) / (data[options["x-axis"]].size - 1)
+    modulation_frequency = options['frequency'] if options.get('frequency') is not None else freq_from_fft(
+        data['modulation_amplitude'], fs=1 / sample_interval)
+    print(f"  Modulation frequency: {modulation_frequency:.2e} Hz")
+
+    model = lmfit.models.ExpressionModel(
+        "ampl * sin({omega} * x + phi) + offset".format(omega=modulation_frequency * 2 * np.pi))
+
+    params = model.make_params(ampl=0.1, phi=0, offset=0.5)
+    fit = model.fit(data['modulation_amplitude'], params, x=data['time'])
+    modulation_amplitude = fit.best_values['ampl']  # in V
+    fit = model.fit(data['output_current'], params, x=data['time'])
+    print(f"    Modulation amplitude: {abs(modulation_amplitude * 2):.2e} Vpp")
+    current_modulation = fit.best_values['ampl'] / options["gain"] / options["sense_resistor"]  # in A
+    print(f"    Error amplitude: {abs(fit.best_values['ampl'] * 2):.2e} App")
+    print(f"    Output Impedance: {abs(modulation_amplitude / current_modulation):.2e} Ω")
+
+    return modulation_frequency, abs(modulation_amplitude / current_modulation) - options["sense_resistor"]
+
+def concat_series(filename, options, **_kwargs):
+    print(f"  Concatenating {len(options['files'])} files")
+    return (
+        pd.DataFrame(
+            [parse_file(**file) for file in options["files"] if file.get("show", True)],
+            columns=options["columns"].values()
+        ),
+        0
+    )
+
+
 FILE_PARSER = {
     "34470A": parse_Keysight34470A_file,
     "34470A_resistance": parse_Keysight34470A_file_2,
@@ -1569,6 +1633,8 @@ FILE_PARSER = {
     "dgdrive_powermeter": parse_data_dgdrive_powermeter,
     "ltspice_fets": parse_data_ltspice_fets,
     "bode100": parse_bode100_file,
+    "output_impedance_generic": parse_output_impedance_generic,
+    "concat_series": concat_series,
 }
 
 

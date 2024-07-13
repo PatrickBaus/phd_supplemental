@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import argparse
+import glob
+import importlib
 
 import matplotlib
 import matplotlib.legend
-import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -32,12 +33,14 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     # "pgf.texsystem": "lualatex",
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(os.path.realpath(__file__)),
@@ -113,16 +116,6 @@ def crop_data(data, crop_index="date", crop=None):
     )
 
 
-def filter_savgol(window_length, polyorder):
-    def filter(data):
-        if len(data) <= window_length:
-            return None
-
-        return signal.savgol_filter(data, window_length, polyorder)
-
-    return filter
-
-
 def filter_butterworth(window_length=0.00005):
     from scipy.signal import butter, filtfilt
 
@@ -183,11 +176,9 @@ def prepare_axis(ax, axis_settings):
     if axis_settings.get("limits_y"):
         ax.set_ylim(*axis_settings.get("limits_y"))
 
-    if axis_settings.get("show_grid", True):
-        ax.grid(True, which="minor", ls="-", color="0.85")
-        ax.grid(True, which="major", ls="-", color="0.45")
-    else:
-        ax.grid(False, which="both")
+    if axis_settings["grid_options"]:
+        for option in axis_settings["grid_options"]:
+            ax.grid(**option)
 
     if axis_settings.get("y_label") is not None:
         ax.set_ylabel(axis_settings["y_label"])
@@ -283,72 +274,22 @@ def plot_series(plot, show_plot_window):
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Popcorn noise plotter.")
     parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
+    parser.add_argument("plotfile", help="One or more yaml configurations to plot.")
     parser.add_argument("--silent", action="store_true", help="Do not show the plot when set.")
 
     return parser
 
 
 if __name__ == "__main__":
-    plots = [
-        {
-            "description": "LM399 Burnin",
-            "show": True,
-            "output_file": {"fname": "../images/lm399_popcorn_noise.pgf"},
-            "crop": {
-                "crop_index": "date",
-                "crop": ["2022-08-31 06:00:00", "2022-09-01 06:00:00"],
-            },  # popcorn noise comparison, used in PhD thesis
-            "primary_axis": {
-                "axis_settings": {
-                    "show_grid": False,
-                    "fixed_order": -6,
-                    "x_scale": "time",
-                    "y_scale": "lin",
-                    # "limits_y": [22.75, 23.25],
-                },
-                "x-axis": "date",
-                "plot_type": "relative",  # absolute, relative, proportional
-                "axis_fixed_order": 0,
-                "columns_to_plot": {  # popcorn noise comparison, used in PhD thesis
-                    "k2002_ch1": {
-                        "label": r"K2002 CH1",
-                        "color": colors[0],
-                        "linewidth": 0.5,
-                    },
-                    "k2002_ch9": {
-                        "label": r"K2002 CH9",
-                        "color": colors[0],
-                        "linewidth": 0.5,
-                    },
-                    "k2002_ch10": {
-                        "label": r"K2002 CH10",
-                        "color": colors[0],
-                        "linewidth": 0.5,
-                    },
-                },
-                "options": {
-                    "show_filtered_only": False,
-                },
-            },
-            "files": [
-                {
-                    "filename": "popcorn_noise_plots/LM399_popcorn_noise_test_2022-08-19_18:00:34+00:00.zip",
-                    "show": True,
-                    "parser": "ltspice_fets",
-                    "options": {
-                        "columns": {0: "date", 1: "k2002_ch1", 9: "k2002_ch9", 10: "k2002_ch10"},
-                        "scaling": {
-                            "date": lambda data: pd.to_datetime(data.date, utc=True),
-                        },
-                    },
-                },
-            ],
-        }
-    ]
-
     parser = init_argparse()
     args = parser.parse_args()
-    plots = (plot for plot in plots if plot.get("show", True))
-    for plot in plots:
-        print("Ploting {plot!s}".format(plot=plot["description"]))
-        plot_series(plot=plot, show_plot_window=not args.silent)
+    plot_files = glob.glob(args.plotfile)
+    for file_path in plot_files:
+        module_name = os.path.splitext(os.path.basename(file_path))[0]
+        spec = importlib.util.spec_from_file_location(module_name, file_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        try:
+            plot_series(plot=module.plot, show_plot_window=not args.silent)
+        except FileNotFoundError as exc:
+            print(f"  Data file not found. Cannot plot graph: {exc}")

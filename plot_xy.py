@@ -10,7 +10,6 @@ import numpy as np
 import os
 import pandas as pd
 from matplotlib.ticker import ScalarFormatter
-import seaborn as sns
 from scipy import stats
 from statsmodels.formula.api import ols
 import lttb
@@ -36,12 +35,14 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     # "pgf.texsystem": "lualatex",
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(os.path.realpath(__file__)),
@@ -119,16 +120,6 @@ def crop_data(data, crop_index="date", crop=None):
     # print(f"    End date:   {data.date.iloc[-1].tz_convert('Europe/Berlin')} (+{(data.date.iloc[-1]-data.date.iloc[0]).total_seconds()/3600:.1f} h)")
 
 
-def filter_savgol(window_length, polyorder):
-    def filter(data):
-        if len(data) <= window_length:
-            return None
-
-        return signal.savgol_filter(data, window_length, polyorder)
-
-    return filter
-
-
 def filter_butterworth(window_length=0.00005):
     from scipy.signal import filtfilt, butter
 
@@ -169,6 +160,7 @@ def prepare_axis(ax, axis_settings, color_map=None):
         ax.set_xscale("log")
     if axis_settings.get("x_scale") == "time":
         ax.xaxis.set_major_locator(matplotlib.dates.AutoDateLocator())
+        # ax.xaxis.set_major_locator(matplotlib.dates.AutoDateLocator(maxticks=6))
         # ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%m-%d %H:%M"))
         ax.xaxis.set_major_formatter(matplotlib.dates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
     if axis_settings.get("invert_y"):
@@ -176,11 +168,9 @@ def prepare_axis(ax, axis_settings, color_map=None):
     if axis_settings.get("invert_x"):
         ax.invert_xaxis()
 
-    if axis_settings.get("show_grid", True):
-        ax.grid(True, which="minor", ls="-", color="0.85")
-        ax.grid(True, which="major", ls="-", color="0.45")
-    # else:
-    #  ax.grid(False, which="both")
+    if axis_settings["grid_options"]:
+        for option in axis_settings["grid_options"]:
+            ax.grid(**option)
 
     ax.set_ylabel(axis_settings["y_label"])
     if axis_settings.get("x_label") is not None:
@@ -193,7 +183,7 @@ def prepare_axis(ax, axis_settings, color_map=None):
 def fit_data(data, x_axis, y_axis):
     model = ols(f"{y_axis} ~ {x_axis}", data).fit()
 
-    # Calculate uncertainty for 1 sigma from the standard error
+    # Calculate uncertainty for 3 sigma from the standard error
     uncertainty = (
         model.bse * stats.t.interval(0.997300203936740, len(data) - 1)[1]
     )  # 1 sigma (1-alpha = 0.682689492137086) = 68%, 2 sigma = 0.954499736103642, 3 sigma = 0.997300203936740, etc
@@ -221,12 +211,13 @@ def downsample_data(x_data, y_data):
 
 
 def plot_data(ax, data, x_axis, column_settings):
+    settings: dict
     for column, settings in column_settings.items():
         if column in data:
             if "cmap" in settings:
                 data_points = max(len(data) // 1000, 1)
                 downsampled_data = data.iloc[::data_points]
-                print(f"  Scatter data downsampled to {len(downsampled_data)} points.")
+                print(f"  Scatter data downsampled to {len(downsampled_data)} points from {len(data)}.")
                 ax.scatter(
                     downsampled_data[x_axis], downsampled_data[column], alpha=0.7, c=downsampled_data.date, **settings
                 )
@@ -251,15 +242,16 @@ def plot_series(plot, show_plot_window):
     if not data.empty:
         crop_data(data, **plot.get("crop", {}))
 
-        data = data.resample("30S", on="date").mean()
+        data = data.resample("30s", on="date").mean()
         data.reset_index(drop=False, inplace=True)
         plot_settings = plot["primary_axis"]
+        number_of_plots = sum([plot[axis].get("show", 0) for axis in ("primary_axis", "xy_plot")])
         process_data(
             data=data, columns=plot_settings["columns_to_plot"], plot_type=plot_settings.get("plot_type", "absolute")
         )
 
-        if True:
-            ax1 = plt.subplot(211)
+        if plot_settings.get("show"):
+            ax1 = plt.subplot(number_of_plots, 1, len(plt.get_fignums())+1)
             # plt.tick_params('x', labelbottom=False)
             prepare_axis(ax=ax1, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
 
@@ -283,24 +275,22 @@ def plot_series(plot, show_plot_window):
 
             plt.legend(lines, labels, loc=plot.get("legend_position", "upper left"))
 
-        if True:
-            ax3 = plt.subplot(212)
-            plot_settings = plot["xy_plot"]
+        plot_settings = plot["xy_plot"]
+        if plot_settings.get("show"):
+            ax = plt.subplot(number_of_plots, 1, len(plt.get_fignums())+1)
             x_axis = plot_settings["x-axis"]
             y_axis = plot_settings["y-axis"]
             fit = fit_data(data, x_axis, y_axis)
             data["fit"] = fit["slope"] * data[x_axis] + fit["intercept"]
-            prepare_axis(ax=ax3, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
-            plot_data(ax3, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
-            lines2, labels2 = ax3.get_legend_handles_labels()
+            prepare_axis(ax=ax, axis_settings=plot_settings["axis_settings"], color_map=plt.cm.tab10.colors)
+            plot_data(ax, data, x_axis=x_axis, column_settings=plot_settings["columns_to_plot"])
+            lines2, labels2 = ax.get_legend_handles_labels()
 
-            ax3.legend(lines2, labels2, loc=plot_settings.get("legend_position", "upper left"))
+            ax.legend(lines2, labels2, loc=plot_settings.get("legend_position", "upper left"))
             if plot_settings.get("annotation"):
-                ax3.annotate(
+                ax.annotate(
                     plot_settings["annotation"]["label"].format(slope=fit["slope"], uncertainty=fit["uncertainty"]),
                     plot_settings["annotation"]["xy"],
-                    # f"Tempco: ({fit['slope']:.3e} ± {fit['uncertainty']:.2e}) \\unit[per-mode=symbol]{{\\ohm \\per \\kelvin}}",
-                    # xy=(0.9,0.1),
                     xycoords="axes fraction",
                     xytext=(-5, 0),
                     textcoords="offset points",

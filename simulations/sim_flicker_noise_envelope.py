@@ -30,11 +30,13 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(__file__),
@@ -161,7 +163,6 @@ if __name__ == "__main__":
             )
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.legend(loc="upper right")
-        # ax.set_title(r'Time Series')
         ax.set_xlabel(r"Time in \unit{\second}")
         ax.set_ylabel(r"Amplitude in arb. unit")
 
@@ -197,7 +198,7 @@ if __name__ == "__main__":
         ax.legend(loc="lower left")
         # ax.set_title(r'Frequency Power Spectral Density')
         ax.set_xlabel(r"Frequency in $\unit{\Hz}$")
-        ax.set_ylabel(r" $S_y(f)$ in $\unit{1 \per \Hz}$")
+        ax.set_ylabel(r"$S_y(f)$ in $\unit{1 \per \Hz}$")
 
     # ADEV plot
     if "adev" in PLOTS_TO_SHOW:
@@ -223,14 +224,12 @@ if __name__ == "__main__":
         ax.grid(True, which="minor", ls="-", color="0.85")
         ax.grid(True, which="major", ls="-", color="0.45")
         # ax.set_ylim(1e-2, 1e4)  # Set limits, so that all plots look the same
-        # ax.set_title(r'Allan Deviation')
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$")
 
     # fig.set_size_inches(11.69,8.27)   # A4 in inch
     # fig.set_size_inches(128/25.4 * 2.7 * 0.8, 96/25.4 * 1.5 * 0.8)  # Latex Beamer size 128 mm by 96 mm
     phi = (5**0.5 - 1) / 2 if PLOT_DIRECTION == "horizontal" else (5**0.5 + 1) / 2  # golden ratio
-    # phi = 1
     scale = 0.3 * len(PLOTS_TO_SHOW)
     scale = 2 / 3  # scale to 0.9 for (almost) full text width
     fig.set_size_inches(441.01773 / 72.27 * scale, 441.01773 / 72.27 * scale * phi)

@@ -13,9 +13,11 @@ plot = {
             "y_label": r"Ouput Impedance $R_{out}$ in \unit{\ohm}",
             "invert_x": False,
             "invert_y": False,
-            "fixed_order": 9,
             "y_scale": "log",
             # "x_scale": "log",  # Turn this on to show, that R_out is a power law
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "vds",
         "plot_type": "absolute",  # absolute, relative, proportional

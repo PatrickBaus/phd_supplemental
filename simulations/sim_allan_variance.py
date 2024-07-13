@@ -30,12 +30,14 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     # "pgf.texsystem": "lualatex",
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(__file__),
@@ -51,8 +53,8 @@ def bin_psd(x_data, y_data, bins):
 
     for i in range(len(bins)-1):
         # Return NaN for empty bins
-        x_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
-        y_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
+        x_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
+        y_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
 
     return x_binned[~np.isnan(x_binned)], y_binned[~np.isnan(y_binned)]
 
@@ -121,8 +123,8 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
 
     if "adev" in plots_to_show:
         # compute ADEV
-        adevs = [at.totdev(noise.time_series, rate=FS, taus="decade")[:2] for noise in colored_noise]
-        drift_taus, drift_adev, *_ = at.totdev(drift_amplitude, data_type="freq", rate=FS, taus="decade")
+        adevs = [at.oadev(noise.time_series, rate=FS, taus="decade")[:2] for noise in colored_noise]
+        drift_taus, drift_adev, *_ = at.oadev(drift_amplitude, data_type="freq", rate=FS, taus="decade")  # FIXME: Change to totdev
 
     fig, axs = plt.subplots(
         len(plots_to_show) if plot_direction != "horizontal" else 1,
@@ -156,7 +158,6 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])  # Limits for random walk
         ax.legend(loc="upper left")
-        # ax.set_title(r'Time Series')
         ax.set_xlabel(r"Time in \unit{\second}")
         ax.set_ylabel(r"Ampl. in arb. unit")
 
@@ -174,10 +175,10 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
 
             print(f"  Plotting {len(freqs)} values.")
             (lines,) = ax.loglog(
-                freqs,
-                [ha * pow(freq, beta + 2) for freq in freqs],
+                [freq for freq in freqs if freq != 0 or beta >= -2],
+                [ha * pow(freq, beta + 2) for freq in freqs if freq != 0 or beta >= -2],
                 "--",
-                label=f"$h_{{{beta+2}}}f^{{{beta+2}}}$",
+                label=rf"$\displaystyle h_{{{beta+2}}}f^{{{beta+2}}}$",
                 color=beta_colors[beta],
             )
             ax.loglog(freqs, psd, ".", color=lines.get_color(), markersize=2)
@@ -188,7 +189,7 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
         ax.legend(loc="upper right")
         # ax.set_title(r'Frequency Power Spectral Density')
         ax.set_xlabel(r"Frequency in $\unit{\Hz}$")
-        ax.set_ylabel(r" $S_y(f)$ in $\unit{1 \per \Hz}$")
+        ax.set_ylabel(r"$S_y(f)$ in $\unit{1 \per \Hz}$")
 
     # ADEV plot
     if "adev" in plots_to_show:
@@ -204,22 +205,21 @@ def plot_noise(betas, plot_types, show_plot_window: bool, plot_settings: dict):
                 taus,
                 [noise.adev_from_qd(tau0, tau) * tau ** ((-3 - noise.b) / 2) for tau in taus],
                 "--",
-                label=f"$\\propto\\sqrt{{h_{{{noise.b+2}}}}}\\tau^{{{(-3-noise.b)/2:+}}}$",
+                label=rf"$\displaystyle \propto\sqrt{{h_{{{noise.b+2}}}}}\tau^{{{(-3-noise.b)/2:+}}}$",
                 color=beta_colors[noise.b],
             )
             ax.loglog(taus, adev, "o", color=lines.get_color(), markersize=3)
 
         if -5 in betas:
             print(f"  Plotting {len(drift_taus)} values.")
-            lines, = ax.loglog(drift_taus, [0.5**0.5 * D * (tau/tau0) for tau in drift_taus], '--', label=r'$\propto D\tau^{+1}$', color=beta_colors[-5])
+            lines, = ax.loglog(drift_taus, [0.5**0.5 * D * (tau/tau0) for tau in drift_taus], '--', label=r'$\displaystyle \propto D\tau^{+1}$', color=beta_colors[-5])
             ax.loglog(drift_taus, drift_adev, 'o', color=lines.get_color(), markersize=3)
 
         ax.legend(loc="best")
-        ax.grid(True, which="minor", ls="-", color="0.85")
+        ax.grid(True, which="minor", axis="x", ls="-", color="0.85")
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])  # Set limits, so that all plots look the same
-        ax.set_xlim(None, 5e3)  # Set limits, so that all plots look the same
-        # ax.set_title(r'Allan Deviation')
+        ax.set_xlim(None, None)  # FIXME: Set limits, so that all plots look the same. Check whether 5e3 is ok
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$")
 
@@ -249,7 +249,7 @@ if __name__ == "__main__":
 
     phi = 0.75  # use 0.75 for the thesis
     scale = 0.4
-    noise_types = [(-2, "white", (-6.5, 6.5)), (-3, "flicker", (-15, 15)), (-4, "random_walk", (-200, 250))]
+    noise_types = [(-2, "white", (-6.5, 6.5)), (-3, "flicker", (-16, 16)), (-4, "random_walk", (-200, 250))]
     plot_types = ["amplitude", "psd", "adev"]
 
     for beta, name, y_limit in noise_types:

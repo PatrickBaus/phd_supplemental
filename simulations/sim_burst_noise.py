@@ -33,11 +33,13 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(__file__),
@@ -96,10 +98,10 @@ def bin_psd(x_data, y_data, bins):
 
     for i in range(len(bins)-1):
         # Return NaN for empty bins
-        x_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
-        y_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
+        x_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
+        y_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
 
-    # drop all np.NaN
+    # drop all np.nan
     return x_binned[~np.isnan(x_binned)], y_binned[~np.isnan(x_binned)]
 
 
@@ -167,7 +169,6 @@ def plot_noise(plot_types, show_plot_window: bool, plot_settings: dict):
             )
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.legend(loc="upper right")
-        #ax.set_title(r'Time Series')
         ax.set_xlabel(r"Time in \unit{\second}")
         ax.set_ylabel(r"Amplitude in arb. unit")
 
@@ -196,9 +197,8 @@ def plot_noise(plot_types, show_plot_window: bool, plot_settings: dict):
         ax.grid(True, which="major", ls="-", color="0.45")
         # ax.set_ylim(5e-2, 5e6)  # Set limits, so that all plots look the same
         ax.legend(loc="lower left")
-        #ax.set_title(r'Frequency Power Spectral Density')
         ax.set_xlabel(r"Frequency in $\unit{\Hz}$")
-        ax.set_ylabel(r" $S_y(f)$ in $\unit{1 \per \Hz}$")
+        ax.set_ylabel(r"$S_y(f)$ in $\unit{1 \per \Hz}$")
 
     # ADEV plot
     if "adev" in plots_to_show:
@@ -224,7 +224,6 @@ def plot_noise(plot_types, show_plot_window: bool, plot_settings: dict):
         ax.grid(True, which="minor", ls="-", color="0.85")
         ax.grid(True, which="major", ls="-", color="0.45")
         # ax.set_ylim(1e-2, 1e4)  # Set limits, so that all plots look the same
-        #ax.set_title(r'Allan Deviation')
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$")
 

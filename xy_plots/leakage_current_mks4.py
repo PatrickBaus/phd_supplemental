@@ -3,7 +3,8 @@ import pandas as pd
 import seaborn as sns
 
 colors = sns.color_palette("colorblind")
-cmap = sns.color_palette("ch:s=-.25,rot=-.25_r", as_cmap=True)
+# cmap = sns.color_palette("ch:s=-.25,rot=-.25_r", as_cmap=True)
+cmap = sns.color_palette("ch:s=.25,rot=-.25", as_cmap=True)  # TODO: revert colourmap, see above
 phi = (5**0.5 - 1) / 2  # golden ratio
 plot = {
     "description": "Leakage Current WIMA MKS4",
@@ -12,19 +13,23 @@ plot = {
         "crop_index": "date",
         "crop": ["2020-03-19 20:00:00", "2023-03-20 10:11:49"],
     },
+    "plot_size": (441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi * 2),
     "output_file": {
         "fname": "../images/leakage_current_mks4.pgf",
     },
     "legend_position": "upper right",
     "primary_axis": {
+        "show": True,
         "axis_settings": {
             "x_label": r"Time (UTC)",
             "y_label": r"Leakage current in \unit{\A}",
             "invert_x": False,
             "invert_y": False,
             "fixed_order": -9,
-            # "y_scale": "lin",
             "x_scale": "time",
+            "grid_options": [
+                {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "date",
         "plot_type": "absolute",  # absolute, relative, proportional
@@ -38,13 +43,11 @@ plot = {
     "secondary_axis": {
         "show": True,
         "axis_settings": {
-            "show_grid": False,
             "y_label": r"Temperature in \unit{\celsius}",
             "invert_x": False,
             "invert_y": False,
-            # "fixed_order": 9,
-            # "y_scale": "lin",
             "x_scale": "lin",
+            "grid_options": [{"visible": False}, ],
         },
         "x-axis": "date",
         "plot_type": "absolute",  # absolute, relative, proportional
@@ -56,11 +59,12 @@ plot = {
         },
     },
     "xy_plot": {
+        "show": True,
         "legend_position": "upper left",
         "x-axis": "temperature",
         "y-axis": "value",
         "annotation": {
-            "label": r"({slope:.3e} ± {uncertainty:.1e}) \unit{{\A \per \kelvin}}",
+            "label": r"({slope:.3e} ± {uncertainty:.1e}) $\textstyle \unit{{\A \per \kelvin}}$",
             "xy": (0.675, 0.4),
         },
         "columns_to_plot": {
@@ -80,8 +84,10 @@ plot = {
             "invert_x": False,
             "invert_y": False,
             "fixed_order": -9,
-            # "y_scale": "lin",
             "x_scale": "lin",
+            "grid_options": [
+                {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
     },
     "files": [

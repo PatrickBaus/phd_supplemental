@@ -30,11 +30,13 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(__file__),
@@ -50,8 +52,8 @@ def bin_psd(x_data, y_data, bins):
 
     for i in range(len(bins)-1):
         # Return NaN for empty bins
-        x_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
-        y_binned[i] = np.NaN if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
+        x_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(x_data[inds == i+1])
+        y_binned[i] = np.nan if len(x_data[inds == i+1]) == 0 else np.mean(y_data[inds == i+1])
 
     return x_binned[~np.isnan(x_binned)], y_binned[~np.isnan(y_binned)]
 
@@ -93,7 +95,7 @@ def generate_noise():
         for beta in labels.keys()
     }
 
-    colored_noise = [at.Noise(nr, qd[beta], beta) for beta in (-2,-3)]
+    colored_noise = [at.Noise(nr+2, qd[beta], beta) for beta in (-2, -3)]  # FIXME: drop the +2
 
     for noise in colored_noise:
         print(
@@ -199,7 +201,6 @@ def plot_noise(colored_noise, apply_az: bool, plot_types: list[str], show_plot_w
         )
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])
-        # ax.set_title(r'Time Series')
         ax.set_xlabel(r"Time in $\unit{\second}$")
         ax.set_ylabel(r"Amplitude in $\unit{\V}$")
 
@@ -226,9 +227,8 @@ def plot_noise(colored_noise, apply_az: bool, plot_types: list[str], show_plot_w
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])
         ax.legend(loc="upper right")
-        # ax.set_title(r'Frequency Power Spectral Density')
         ax.set_xlabel(r"Frequency in $\unit{\Hz}$")
-        ax.set_ylabel(r" $S_y(f)$ in $\unit{\V^2 \per \Hz}$")
+        ax.set_ylabel(r"$S_y(f)$ in $\displaystyle \unit{\V^2 \per \Hz}$")
 
     # ADEV plot
     if "adev" in plot_types:
@@ -253,7 +253,6 @@ def plot_noise(colored_noise, apply_az: bool, plot_types: list[str], show_plot_w
         ax.grid(True, which="minor", ls="-", color="0.85")
         ax.grid(True, which="major", ls="-", color="0.45")
         ax.set_ylim(plot_settings["ylim"])
-        # ax.set_title(r'Allan Deviation')
         ax.set_xlabel(r"$\tau$ in \unit{\second}")
         ax.set_ylabel(r"ADEV $\sigma_A(\tau)$ in \unit{\V}")
 
@@ -273,6 +272,7 @@ def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Allan deviation simulator.")
     parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
     parser.add_argument('--silent', action='store_true', help="Do not show the plot when set.")
+    parser.add_argument('--autozero', action='store_true', help="Apply the autozero algorithm.")
 
     return parser
 
@@ -290,7 +290,7 @@ if __name__ == "__main__":
     for plot_type in plot_types:
         plot_settings = {
             "plot_size": (441.01773 / 72.27 * scale, 441.01773 / 72.27 * scale * phi),
-            "fname": f"../../images/autozero_raw_{plot_type}.pgf",
+            "fname": f"../../images/autozero{'' if args.autozero else '_raw'}_{plot_type}.pgf",
             "ylim": (-4.5e-6+10, 4.5e-6+10) if plot_type == "amplitude" else (None, None),
         }
-        plot_noise(colored_noise=colored_noise, apply_az=False, plot_types=[plot_type, ], show_plot_window=not args.silent, plot_settings=plot_settings)
+        plot_noise(colored_noise=colored_noise, apply_az=args.autozero, plot_types=[plot_type, ], show_plot_window=not args.silent, plot_settings=plot_settings)

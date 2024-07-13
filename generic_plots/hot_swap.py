@@ -8,6 +8,7 @@ plot = {
     "show": False,
     "output_file": {"fname": "../images/hot_swap.pgf"},
     "crop_secondary_to_primary": True,
+    "plot_size": (441.01773 * 0.6 * 0.75 / 72.27, 441.01773 * 0.6 * 0.75 / 72.27 * phi),
     "legend_position": "best",
     "primary_axis": {
         "axis_settings": {
@@ -17,6 +18,9 @@ plot = {
             "invert_y": False,
             "fixed_order": None,
             "y_scale": "linear",
+            "grid_options": [
+                {"which": "minor", "ls": "-", "color": "0.85"}, {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "time",
         "plot_type": "absolute",  # absolute, relative, proportional
@@ -24,6 +28,7 @@ plot = {
             "vout": {
                 "label": "Input voltage",
                 "color": colors[0],
+                "linewidth": 1,
             },
         },
     },

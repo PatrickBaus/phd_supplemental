@@ -3,7 +3,8 @@ import pandas as pd
 import seaborn as sns
 
 colors = sns.color_palette("colorblind")
-cmap = sns.color_palette("ch:s=-.25,rot=-.25_r", as_cmap=True)
+# cmap = sns.color_palette("ch:s=-.25,rot=-.25_r", as_cmap=True)
+cmap = sns.color_palette("ch:s=.25,rot=-.25", as_cmap=True)  # TODO: revert colourmap, see above
 phi = (5**0.5 - 1) / 2  # golden ratio
 plot = {
     "description": r"DgTemp Tempco Test",
@@ -18,14 +19,17 @@ plot = {
     "plot_size": (441.01773 / 72.27 * 0.8, 441.01773 / 72.27 * 0.8 * phi * 2),
     "legend_position": "upper left",
     "primary_axis": {
+        "show": True,
         "axis_settings": {
             "x_label": r"Time (UTC)",
             "y_label": r"Resistance deviation in \unit{\ohm}",
             "invert_x": False,
             "invert_y": False,
             "fixed_order": -3,
-            # "y_scale": "lin",
             "x_scale": "time",
+            "grid_options": [
+                {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
         "x-axis": "date",
         "plot_type": "absolute",  # absolute, relative, proportional
@@ -39,13 +43,11 @@ plot = {
     "secondary_axis": {
         "show": True,
         "axis_settings": {
-            "show_grid": False,
             "y_label": r"Temperature in \unit{\celsius}",
             "invert_x": False,
             "invert_y": True,
-            # "fixed_order": 9,
-            # "y_scale": "lin",
             "x_scale": "lin",
+            "grid_options": [{"visible": False}, ],
         },
         "x-axis": "date",
         "plot_type": "absolute",  # absolute, relative, proportional
@@ -57,11 +59,12 @@ plot = {
         },
     },
     "xy_plot": {
+        "show": True,
         "legend_position": "upper right",
         "x-axis": "temperature",
         "y-axis": "value_ext",
         "annotation": {
-            "label": r"({slope:.3e} ± {uncertainty:.1e}) \unit[per-mode=symbol]{{\ohm \per \kelvin}}",
+            "label": r"({slope:.3e} ± {uncertainty:.1e}) $\textstyle \unit{{\ohm \per \kelvin}}$",
             "xy": (0.7, 0.2),
         },
         "columns_to_plot": {
@@ -81,8 +84,10 @@ plot = {
             "invert_x": False,
             "invert_y": False,
             "fixed_order": -3,
-            # "y_scale": "lin",
             "x_scale": "lin",
+            "grid_options": [
+                {"which": "major", "ls": "-", "color": "0.45"}
+            ]
         },
     },
     "files": [

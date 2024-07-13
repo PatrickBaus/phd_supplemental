@@ -30,12 +30,14 @@ tex_fonts = {
     "text.latex.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     # "pgf.texsystem": "lualatex",
     "pgf.preamble": "\n".join(
         [  # plots will use this preamble
             r"\usepackage{siunitx}",
+            r"\sisetup{per-mode = symbol}%"
         ]
     ),
     "savefig.directory": os.path.dirname(os.path.realpath(__file__)),
@@ -102,6 +104,9 @@ def process_data(data, columns, plot_type):
             (tau, adev, adev_error, n) = allantools.totdev(
                 data[column].values, data_type="freq", rate=sample_rate
             )  # , taus="all")
+            #(tau, adev, adev_error, n) = allantools.oadev(
+            #    data[column].values, data_type="freq", rate=sample_rate, taus="all"
+            #)
             df["tau"] = tau
             df[column] = adev
             df[column + "_error"] = adev_error
@@ -160,7 +165,7 @@ def plot_series(plot, show_plot_window):
             prepare_axis(ax=ax, label=plot_settings["label"])  # , color_map=plt.cm.tab10.colors)
             plot_data(ax, processed_data, column_settings=plot_settings["columns_to_plot"])
 
-            # Create some artifical noise data
+            # Create some artificial noise data
             # Quantization noise ~tau**-1
             # White nose ~tau**(-1/2)
             # Flicker noise ~const
@@ -206,12 +211,6 @@ phi = (5**0.5 - 1) / 2  # golden ratio
 
 
 if __name__ == "__main__":
-    plots = [
-
-
-    ]
-
-
     def init_argparse() -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(description="Allan variance plotter.")
         parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
