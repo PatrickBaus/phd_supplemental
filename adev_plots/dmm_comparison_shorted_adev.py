@@ -6,7 +6,6 @@ phi = (5**0.5 - 1) / 2  # golden ratio
 plot = {
             "description": "DMMs shorted input",
             "show": True,
-            #'zoom': ['2021-12-03 12:30:00', '2022-10-14 18:04:27.561289+02:00'],
             "output_file": {"fname": "../images/dmm_comparison_shorted_adev.pgf"},
             "plot_size": (441.01773 / 72.27 * 0.89, 441.01773 / 72.27 * 0.89 * phi),
             "primary_axis": {
@@ -75,20 +74,6 @@ plot = {
                     },
                 },
                 {
-                    "filename": "adev_plots/DMM_shorted_input_k2002_2022-12-06_21:21:42+00:00.zip",
-                    "show": False,
-                    "parser": "ltspice_fets",
-                    "options": {
-                        "columns": {
-                            0: "date",
-                            1: "k2002_noaz",
-                        },
-                        "scaling": {
-                            "date": lambda data: pd.to_datetime(data.date, utc=True, format="ISO8601"),
-                        },
-                    },
-                },
-                {
                     "filename": "adev_plots/DMM_shorted_input_34470a_2022-12-02_16:56:31+00:00.zip",
                     "show": True,
                     "parser": "ltspice_fets",
@@ -96,20 +81,6 @@ plot = {
                         "columns": {
                             0: "date",
                             1: "34470a",
-                        },
-                        "scaling": {
-                            "date": lambda data: pd.to_datetime(data.date, utc=True, format="ISO8601"),
-                        },
-                    },
-                },
-                {
-                    "filename": "adev_plots/DMM_shorted_input_34470a_2022-11-29_11:49:13+00:00.zip",
-                    "show": False,
-                    "parser": "ltspice_fets",
-                    "options": {
-                        "columns": {
-                            0: "date",
-                            1: "34470a_noaz",
                         },
                         "scaling": {
                             "date": lambda data: pd.to_datetime(data.date, utc=True, format="ISO8601"),
