@@ -202,6 +202,8 @@ def plot_data(ax, data, x_axis, column_settings):
 
 
 def plot_series(plot, show_plot_window):
+    if not plot.get("show", True):
+        return
     print(f"Ploting {plot['description']}")
     # Load the data to be plotted
     plot_files = (plot_file for plot_file in plot["files"] if plot_file.get("show", True))
@@ -238,25 +240,25 @@ def plot_series(plot, show_plot_window):
             labels += labels2
         plt.legend(lines, labels, loc="best")
 
-    fig = plt.gcf()
+        fig = plt.gcf()
 
-    if plot.get("plot_size"):
-        fig.set_size_inches(*plot["plot_size"])
-    if plot.get("title") is not None:
-        plt.suptitle(plot["title"], fontsize=16)
+        if plot.get("plot_size"):
+            fig.set_size_inches(*plot["plot_size"])
+        if plot.get("title") is not None:
+            plt.suptitle(plot["title"], fontsize=16)
 
-    plt.tight_layout()
-    if plot.get("title") is not None:
-        plt.subplots_adjust(top=0.88)
+        plt.tight_layout()
+        if plot.get("title") is not None:
+            plt.subplots_adjust(top=0.88)
 
-    if plot.get("output_file"):
-        print(f"  Saving image to '{plot['output_file']['fname']}'")
-        plt.savefig(**plot["output_file"])
+        if plot.get("output_file"):
+            print(f"  Saving image to '{plot['output_file']['fname']}'")
+            plt.savefig(**plot["output_file"])
 
-    if show_plot_window:
-        plt.show()
+        if show_plot_window:
+            plt.show()
 
-    plt.close(fig)
+        plt.close(fig)
 
 
 def init_argparse() -> argparse.ArgumentParser:

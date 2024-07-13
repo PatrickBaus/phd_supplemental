@@ -140,6 +140,8 @@ def plot_data(ax, data, column_settings):
 
 
 def plot_series(plot, show_plot_window):
+    if not plot.get("show", True):
+        return
     print(f"Plotting {plot['description']}")
     # Load the data to be plotted
     plot_files = (plot_file for plot_file in plot["files"] if plot_file.get("show", True))
@@ -184,27 +186,27 @@ def plot_series(plot, show_plot_window):
             lines, labels = ax.get_legend_handles_labels()
             plt.legend(lines, labels, loc="best")
 
-    fig = plt.gcf()
-    #  fig.set_size_inches(11.69,8.27)   # A4 in inch
-    #  fig.set_size_inches(128/25.4 * 2.7 * 0.8, 96/25.4 * 1.5 * 0.8)  # Latex Beamer size 128 mm by 96 mm
-    if plot.get("plot_size"):
-        fig.set_size_inches(*plot["plot_size"])
-    else:
-        phi = (5**0.5 - 1) / 2  # golden ratio
-        fig.set_size_inches(441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi)
-    if plot.get("title") is not None:
-        plt.suptitle(plot["title"], fontsize=16)
+        fig = plt.gcf()
+        #  fig.set_size_inches(11.69,8.27)   # A4 in inch
+        #  fig.set_size_inches(128/25.4 * 2.7 * 0.8, 96/25.4 * 1.5 * 0.8)  # Latex Beamer size 128 mm by 96 mm
+        if plot.get("plot_size"):
+            fig.set_size_inches(*plot["plot_size"])
+        else:
+            phi = (5**0.5 - 1) / 2  # golden ratio
+            fig.set_size_inches(441.01773 / 72.27 * 0.9, 441.01773 / 72.27 * 0.9 * phi)
+        if plot.get("title") is not None:
+            plt.suptitle(plot["title"], fontsize=16)
 
-    plt.tight_layout()
-    if plot.get("title") is not None:
-        plt.subplots_adjust(top=0.88)
-    if plot.get("output_file"):
-        print(f"  Saving image to '{plot['output_file']['fname']}'")
-        plt.savefig(**plot["output_file"])
-    if show_plot_window:
-        plt.show()
+        plt.tight_layout()
+        if plot.get("title") is not None:
+            plt.subplots_adjust(top=0.88)
+        if plot.get("output_file"):
+            print(f"  Saving image to '{plot['output_file']['fname']}'")
+            plt.savefig(**plot["output_file"])
+        if show_plot_window:
+            plt.show()
 
-    plt.close(fig)
+        plt.close(fig)
 
 
 phi = (5**0.5 - 1) / 2  # golden ratio
