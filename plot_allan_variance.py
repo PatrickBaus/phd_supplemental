@@ -165,7 +165,7 @@ def plot_series(plot, show_plot_window):
             prepare_axis(ax=ax, label=plot_settings["label"])  # , color_map=plt.cm.tab10.colors)
             plot_data(ax, processed_data, column_settings=plot_settings["columns_to_plot"])
 
-            # Create some artifical noise data
+            # Create some artificial noise data
             # Quantization noise ~tau**-1
             # White nose ~tau**(-1/2)
             # Flicker noise ~const
@@ -211,12 +211,6 @@ phi = (5**0.5 - 1) / 2  # golden ratio
 
 
 if __name__ == "__main__":
-    plots = [
-
-
-    ]
-
-
     def init_argparse() -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(description="Allan variance plotter.")
         parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} version {__version__}")
