@@ -1,0 +1,2 @@
+import matplotlib.font_manager
+matplotlib.font_manager._load_fontmanager(try_read_cache=True)

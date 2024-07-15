@@ -13,8 +13,9 @@ RUN \
 
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-COPY requirements.txt /
+COPY requirements.txt gen_matplotlib_cache.py /
 
 RUN \
     pip install -r /requirements.txt && \
-    mktexfmt xelatex.fmt
+    mktexfmt xelatex.fmt && \
+    python /gen_matplotlib_cache.py
