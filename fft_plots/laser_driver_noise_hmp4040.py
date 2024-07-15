@@ -7,7 +7,7 @@ colors = sns.color_palette("colorblind", 11)
 phi = (5**0.5 - 1) / 2  # golden ratio
 plot = {
     "description": "DgDrive vs HMP4040",
-    "show": False,
+    "show": True,
     "output_file": {"fname": "../images/laser_driver_noise_hmp4040.pgf"},
     #'crop': {
     #    "crop_index": "frequency",

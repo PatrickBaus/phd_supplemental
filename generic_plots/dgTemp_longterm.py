@@ -5,7 +5,7 @@ colors = sns.color_palette("colorblind")
 phi = (5**0.5 - 1) / 2  # golden ratio
 plot = {
     "description": "DgTemp Longterm",
-    "show": False,
+    "show": True,
     "output_file": {"fname": "../images/dgTemp_longterm.pgf"},
     "crop": {
         "crop_index": "date",

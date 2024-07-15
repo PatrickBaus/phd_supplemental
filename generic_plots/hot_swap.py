@@ -5,7 +5,7 @@ phi = (5**0.5 - 1) / 2  # golden ratio
 plot = {
     "description": "Hot Swap Oscillations",
     "title": None,
-    "show": False,
+    "show": True,
     "output_file": {"fname": "../images/hot_swap.pgf"},
     "crop_secondary_to_primary": True,
     "plot_size": (441.01773 * 0.6 * 0.75 / 72.27, 441.01773 * 0.6 * 0.75 / 72.27 * phi),
