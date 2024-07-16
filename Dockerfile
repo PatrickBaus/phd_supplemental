@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN \
     apt update && \
-    apt install -y python3.12-venv && \
+    apt install -y python3.11-venv && \
     python3 -m venv --upgrade-deps $VIRTUAL_ENV && \
     rm -rf /var/lib/apt/lists/*
 
